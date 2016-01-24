@@ -2,7 +2,7 @@
 lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 
-require 'active_elastic_job/version'
+require 'what_happened/version'
 
 Gem::Specification.new do |spec|
   spec.platform      = Gem::Platform::RUBY

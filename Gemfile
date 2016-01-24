@@ -1,3 +1,4 @@
 source 'https://rubygems.org'
 
-gem 'rails', '~> 4.x'
+gemspec
+gem 'rspec', '~> 3.4'
