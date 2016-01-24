@@ -47,10 +47,11 @@ module WhatHappened
       end
     end
 
-    attr_reader :events
+    attr_reader :events, :queue_name
 
     def initialize
       @events  = ActiveSupport::HashWithIndifferentAccess.new
+      @queue_name = :default
     end
 
     def a_new(model, &notifications)
@@ -67,6 +68,10 @@ module WhatHappened
       triggering_events(version).each do |event|
         event.fire(version)
       end
+    end
+
+    def queue_as(queue_name)
+      @queue_name = queue_name
     end
 
     private
@@ -105,8 +110,18 @@ module WhatHappened
 
     included do
       after_create do |version|
-        WhatHappened.config.broadcast(version)
+        BroadcastJob.perform_later(version)
       end
+    end
+  end
+
+  class BroadcastJob < ActiveJob::Base
+    queue_as do
+      WhatHappened.config.queue_name
+    end
+
+    def perform(version)
+      WhatHappened.config.broadcast(version)
     end
   end
 end
@@ -116,6 +131,8 @@ ActiveRecord::Base.include(WhatHappened::InstanceMethods)
 PaperTrail::Version.include(WhatHappened::AfterPaperTrailVersionCreateCallback)
 
 WhatHappened.define do
+  queue_as :notifications
+
   a_new :message do
     notifies message.recipient, of: :new_message_in_inbox
   end
