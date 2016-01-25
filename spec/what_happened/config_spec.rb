@@ -12,23 +12,25 @@ describe WhatHappened::Config do
     stub_const("Message", message_class)
   end
 
-  describe "#creating" do
-    let(:definition) do
-      Proc.new do
-        creating :message do
-          notifies message.recipient, of: :new_message_in_inbox
+  describe "create update destroy callbacks" do
+    describe "#creating" do
+      let(:definition) do
+        Proc.new do
+          creating :message do
+            notifies message.recipient, of: :new_message_in_inbox
+          end
         end
       end
-    end
 
-    it "adds a create event" do
-      expect(config.events[:create]).to_not be_empty
-      expect(config.events[:create][:message]).to_not be_empty
-    end
+      it "adds a create event" do
+        expect(config.events[:create]).to_not be_empty
+        expect(config.events[:create][:message]).to_not be_empty
+      end
 
-    it "starts a paper trail" do
-      expect(message_class).to receive(:has_paper_trail).with(hash_including(on: [ :create ]))
-      config
+      it "starts a paper trail" do
+        expect(message_class).to receive(:has_paper_trail).with(hash_including(on: [ :create ]))
+        config
+      end
     end
   end
 
