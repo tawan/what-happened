@@ -1,27 +1,17 @@
-require 'active_support'
-require 'active_support/hash_with_indifferent_access'
-require 'active_support/core_ext'
-
 module WhatHappened
   class Config
-    attr_reader :events, :queue_name
+    attr_reader :queue_name
 
-    def initialize(&definition)
-      @events = HashWithIndifferentAccess.new
+    include WhatHappened::DSLSupport::Config
+
+    def initialize
+      @events =  [ ]
       @queue_name = :default
-      instance_eval(&definition)
     end
 
-    def creating(model, &notifications)
-      events[:create] ||= ActiveSupport::HashWithIndifferentAccess.new
-      events[:create][model] ||= []
-      events[:create][model] << Event.new(model, notifications)
-      model_class = model.to_s.camelize.constantize
+    def track_create(model_class, event_subscribers = nil)
       paper_trail_on_create(model_class)
-    end
-
-    def queue_as(queue_name)
-      @queue_name = queue_name
+      @events << Event.new(model_class, :create, event_subscribers)
     end
 
     def broadcast(version)
@@ -31,9 +21,9 @@ module WhatHappened
     end
 
     private
-    
+
     def triggering_events(version)
-      events[version.event][version.item.class.name.tableize.singularize]
+      @events.select { |e| e.fires?(version.item.class, version.event) }
     end
 
     def paper_trail_on_create(model_class)

@@ -1,71 +1,66 @@
 require 'spec_helper'
 
 describe WhatHappened::Event do
-  let(:model_name) { :message }
+  let(:model_class) { double("message_class") }
+  let(:event_name) { "create" }
+  let(:subscribers) { [ ] }
+  let(:event) { WhatHappened::Event.new(model_class, event_name, subscribers) }
   let(:version) { double("version") }
-  let(:model_instance) { double("model instance") }
-  let(:notifications_in_dsl) { Proc.new {} }
-  let(:recipient) { double("recipient") }
-
-  subject(:event) { WhatHappened::Event.new(model_name, notifications_in_dsl) }
+  let(:model_instance) { double("model_instance") }
 
   before do
     allow(version).to receive(:item) { model_instance }
-    allow(model_instance).to receive(:recipient) { recipient }
+    allow(WhatHappened::Notification).to receive(:create)
+  end
+
+  describe "#event_name" do
+    subject { event.event_name }
+
+    it { is_expected.to eq(event_name) }
+  end
+
+  describe "#fires?" do
+    subject { event.fires?(model_class, current_event_name) }
+    context "when model_class and event name match" do
+      let(:current_event_name) { event_name }
+      let(:current_model_class) { message_class }
+
+      it { is_expected.to be true }
+    end
+
+    context "when current event name differs from event's event name" do
+      let(:current_event_name) { "update" }
+
+      it { is_expected.to be false }
+    end
   end
 
   describe "#fire" do
-    it "arms the event with given version" do
-      expect(event).to receive(:arm).with(version)
-      event.fire(version)
-    end
-
-    it "evaluates notification declarations" do
-      expect(event).to receive(:eval_notifications)
-      event.fire(version)
-    end
-  end
-
-  describe "#arm" do
-    it "sets the current model instance" do
-      event.send(:arm, version)
-      expect(event.send(:model_instance)).to eq(model_instance)
-    end
-  end
-
-  describe "#eval_notifications" do
-    it "evaluates given notifications Proc object in instance context" do
-      expect(event).to receive(:instance_eval)
-      event.fire(version)
-    end
-  end
-
-  describe "#notify" do
-    it "creates a notification" do
-      expect(WhatHappened::Notification).to receive(:create).
-        with(hash_including(version: version, recipient: recipient))
-      event.send(:arm, version)
-      event.send(:notify, recipient)
-    end
-  end
-
-  describe "DSL support" do
-    let(:notifications_in_dsl) do
-      Proc.new do
-        notifies message.recipient
-      end
+    subject { event.fire(version) }
+    let(:recipient) { double("recipient") }
+    let(:subscribers) do
+      [ lambda { |model_instance| model_instance.recipient } ]
     end
 
     before do
-      allow(WhatHappened::Notification).to receive(:create)
-    end
-    
-    it "responds to the model_name" do
-      expect { event.send(model_name) }.not_to raise_error
+      allow(model_instance).to receive(:recipient) { recipient }
     end
 
-    it "notifies recipient" do
-      expect(event).to receive(:notify).with(recipient)
+    it "creates a notification for each subscriber" do
+      expect(WhatHappened::Notification).to receive(:create).with(
+        hash_including(version: version, recipient: recipient)
+      )
+      subject
+    end
+  end
+
+  describe "#add_subscriber" do
+    subject { event.add_subscriber(subscriber) }
+    let(:subscriber) { double("subscriber") }
+
+    it "adds subscriber" do
+      expect(subscriber).to receive(:call).with(model_instance)
+      subject
       event.fire(version)
     end
   end

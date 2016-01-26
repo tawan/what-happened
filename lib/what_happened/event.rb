@@ -1,42 +1,27 @@
 module WhatHappened
   class Event
-    def initialize(model_name, notifications)
-      @model_name = model_name
-      @notifications = notifications
+    attr_reader :event_name, :subscribers
+
+    def initialize(model_class, event_name, subscribers = [ ])
+      @model_class = model_class
+      @event_name = event_name
+      @subscribers = subscribers
+    end
+
+    def fires?(model_class, event_name)
+      return false unless model_class == @model_class
+      event_name.to_s == self.event_name.to_s
+    end
+
+    def add_subscriber(subscriber)
+      @subscribers << subscriber
     end
 
     def fire(version)
-      arm(version)
-      eval_notifications
-    end
-
-    def method_missing(methodId, *args)
-      if methodId == @model_name
-        @model_instance
-      else
-        super
+      @subscribers.each do |s|
+        recipient = s.call(version.item)
+        Notification.create(version: version, recipient: recipient)
       end
-    end
-
-    private
-
-    attr_reader :model_instance
-
-    def arm(version)
-      @model_instance = version.item
-      @version = version
-    end
-
-    def eval_notifications
-      instance_eval(&@notifications)
-    end
-
-    def notify(recipient)
-      Notification.create(version: @version, recipient: recipient)
-    end
-
-    def notifies(recipient)
-      notify(recipient)
     end
   end
 end
