@@ -32,6 +32,7 @@ describe WhatHappened::DSLSupport::Config do
       allow(version).to receive(:event) { "create" }
       allow(item).to receive(:recipient) { recipient }
       allow_any_instance_of(WhatHappened::Event).to receive(:fires?) { true }
+      allow(recipient).to receive(:class) { double("recipient_class").as_null_object }
     end
     it "creates a subscriber" do
       config.specify &specification

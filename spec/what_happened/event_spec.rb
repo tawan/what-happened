@@ -7,10 +7,17 @@ describe WhatHappened::Event do
   let(:event) { WhatHappened::Event.new(model_class, event_name, subscribers) }
   let(:version) { double("version") }
   let(:model_instance) { double("model_instance") }
+  let(:recipient) { double("recipient") }
+  let(:recipient_class) { double("recipient_class").as_null_object }
+  let(:subscribers) do
+    [ lambda { |model_instance| model_instance.recipient } ]
+  end
 
   before do
     allow(version).to receive(:item) { model_instance }
     allow(WhatHappened::Notification).to receive(:create)
+    allow(model_instance).to receive(:recipient) { recipient }
+    allow(recipient).to receive(:class) { recipient_class }
   end
 
   describe "#event_name" do
@@ -37,14 +44,6 @@ describe WhatHappened::Event do
 
   describe "#fire" do
     subject { event.fire(version) }
-    let(:recipient) { double("recipient") }
-    let(:subscribers) do
-      [ lambda { |model_instance| model_instance.recipient } ]
-    end
-
-    before do
-      allow(model_instance).to receive(:recipient) { recipient }
-    end
 
     it "creates a notification for each subscriber" do
       expect(WhatHappened::Notification).to receive(:create).with(
@@ -52,16 +51,15 @@ describe WhatHappened::Event do
       )
       subject
     end
-  end
 
-  describe "#add_subscriber" do
-    subject { event.add_subscriber(subscriber) }
-    let(:subscriber) { double("subscriber") }
-
-    it "adds subscriber" do
-      expect(subscriber).to receive(:call).with(model_instance)
+    it "adds notification association to recipient class" do
+      expect(recipient_class).to receive(:has_many).with(
+        :notifications, hash_including(
+          as: :recipient,
+          class_name: "WhatHappened::Notification"
+        )
+      )
       subject
-      event.fire(version)
     end
   end
 end
