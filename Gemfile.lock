@@ -45,6 +45,7 @@ GEM
       tzinfo (~> 1.1)
     arel (6.0.3)
     builder (3.2.2)
+    byebug (8.2.1)
     concurrent-ruby (1.0.0)
     diff-lcs (1.2.5)
     erubis (2.7.0)
@@ -123,5 +124,6 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  byebug
   rspec (~> 3.4)
   what_happened!
