@@ -4,5 +4,6 @@ FactoryGirl.define do
   end
 
   factory :message do
+    text "Hi wie geht's?"
   end
 end
