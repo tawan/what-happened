@@ -1,0 +1,5 @@
+language: ruby
+rvm:
+  - 2.3.0
+  - 1.9.3
+script: SPEC_ALL=true bundle exec rspec spec
