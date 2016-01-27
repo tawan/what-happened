@@ -4,16 +4,20 @@ module WhatHappened
       app.config.x.what_happened = Config.new
 
       app.config.after_initialize do
-        PaperTrail::Version.after_create do |version|
-          app.config.x.what_happened.broadcast(version)
-        end
-        PaperTrail::Version.after_update do |version|
-          app.config.x.what_happened.broadcast(version)
-        end
+        ActiveSupport.on_load(:active_record) do
+          PaperTrail::Version.after_create do |version|
+            app.config.x.what_happened.broadcast(version)
+          end
+          PaperTrail::Version.after_update do |version|
+            app.config.x.what_happened.broadcast(version)
+          end
 
-        path = File.join(app.root, "config", "what_happened.rb")
-        if File.exist?(path)
-          app.config.x.what_happened.instance_eval(File.read(path))
+          ActiveRecord::Base.include(WhatHappened::Model)
+
+          path = File.join(app.root, "config", "what_happened.rb")
+          if File.exist?(path)
+            app.config.x.what_happened.instance_eval(File.read(path))
+          end
         end
       end
     end
