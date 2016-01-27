@@ -15,7 +15,7 @@ module WhatHappened
             app.config.x.what_happened.broadcast(version)
           end
 
-          ActiveRecord::Base.include(WhatHappened::Model)
+          ActiveRecord::Base.send(:include, WhatHappened::Model)
 
           path = File.join(app.root, "config", "what_happened.rb")
           if File.exist?(path)
