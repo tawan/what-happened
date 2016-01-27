@@ -25,9 +25,11 @@ RSpec.describe Message, type: :model do
     end
 
     it "creates a notification" do
-      expect(recipient.notifications).to be_empty
+      expect(WhatHappened::Notification.all).to be_empty
       m = create(:message, sender: sender, recipient: recipient)
-      expect(recipient.notifications.length).to be 1
+      expect(WhatHappened::Notification.all.length).to be 1
+      notification = WhatHappened::Notification.first
+      expect(notification.recipient.id).to eq(recipient.id)
     end
   end
 end

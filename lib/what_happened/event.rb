@@ -13,24 +13,15 @@ module WhatHappened
       event_name.to_s == self.event_name.to_s
     end
 
+    def add_subscriber(subscriber)
+      @subscribers << subscriber
+    end
+
     def fire(version)
       @subscribers.each do |s|
         recipient = s.call(version.item)
         Notification.create(version: version, recipient: recipient)
-        unless recipient.respond_to?(:notifications)
-          add_notification_assocation(recipient.class)
-        end
       end
-    end
-
-    private
-
-    def add_notification_assocation(klass)
-      klass.has_many(
-        :notifications,
-        as: :recipient,
-        class_name: "WhatHappened::Notification"
-      )
     end
   end
 end
