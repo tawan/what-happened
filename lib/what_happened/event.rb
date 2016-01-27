@@ -19,7 +19,8 @@ module WhatHappened
 
     def fire(version)
       @subscribers.each do |s|
-        recipient = s.call(version.item)
+        item = version.item.present? ? version.item : version.reify
+        recipient = s.call(item)
         Notification.create(version: version, recipient: recipient)
       end
     end

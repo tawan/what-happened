@@ -11,6 +11,9 @@ module WhatHappened
           PaperTrail::Version.after_update do |version|
             app.config.x.what_happened.broadcast(version)
           end
+          PaperTrail::Version.after_destroy do |version|
+            app.config.x.what_happened.broadcast(version)
+          end
 
           ActiveRecord::Base.include(WhatHappened::Model)
 

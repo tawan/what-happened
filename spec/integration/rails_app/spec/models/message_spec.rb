@@ -39,4 +39,21 @@ RSpec.describe Message, type: :model do
       expect(recipient.what_happened.all.length).to be 1
     end
   end
+
+  describe "destroy" do
+    before do
+      mount_new_what_happened_config.specify do
+        destroying_message do
+          notifies { |message| message.recipient }
+        end
+      end
+    end
+
+    it "creates a notification" do
+      m = create(:message, sender: sender, recipient: recipient)
+      expect(WhatHappened::Notification.all).to be_empty
+      m.destroy
+      expect(recipient.what_happened.all.length).to be 1
+    end
+  end
 end

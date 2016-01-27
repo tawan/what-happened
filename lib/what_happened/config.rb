@@ -17,6 +17,10 @@ module WhatHappened
       track(:update, model_class, event_subscribers)
     end
 
+    def track_destroy(model_class, event_subscribers = nil)
+      track(:destroy, model_class, event_subscribers)
+    end
+
     def broadcast(version)
       triggering_events(version).each do |event|
         event.fire(version)
@@ -31,7 +35,7 @@ module WhatHappened
     end
 
     def triggering_events(version)
-      @events.select { |e| e.fires?(version.item.class, version.event) }
+      @events.select { |e| e.fires?(version.item_type.constantize, version.event) }
     end
 
     def paper_trail_on(event_name, model_class)

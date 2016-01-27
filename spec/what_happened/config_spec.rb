@@ -31,9 +31,13 @@ describe WhatHappened::Config do
     let(:item) { double("item") }
 
     before do
+      unless defined? Message
+        class Message; end;
+      end
       allow(event).to receive(:fires?) { true }
       allow(WhatHappened::Event).to receive(:new) { event }
       allow(version).to receive(:item) { item }
+      allow(version).to receive(:item_type) { "Message" }
       allow(item).to receive(:class) { message_class }
       allow(version).to receive(:event) { "create" }
       config.track_create(message_class)

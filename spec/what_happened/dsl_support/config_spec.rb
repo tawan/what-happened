@@ -29,6 +29,7 @@ describe WhatHappened::DSLSupport::Config do
 
     before do
       allow(version).to receive(:item) { item }
+      allow(version).to receive(:item_type) { "Message" }
       allow(version).to receive(:event) { "create" }
       allow(item).to receive(:recipient) { recipient }
       allow_any_instance_of(WhatHappened::Event).to receive(:fires?) { true }
