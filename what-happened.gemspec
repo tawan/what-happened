@@ -7,7 +7,7 @@ require 'what_happened/version'
 Gem::Specification.new do |spec|
   spec.platform      = Gem::Platform::RUBY
   spec.name          = 'what_happened'
-  spec.version       = WhatHappened::VERSION
+  spec.version       = WhatHappened.version
   spec.authors       = ['Tawan Sierek']
   spec.email         = ['tawan@sierek.com']
   spec.description   = ''

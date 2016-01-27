@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    what_happened (0.0.1)
+    what_happened (0.1.0)
       paper_trail (~> 4.0.2)
       rails (~> 4.2)
 
