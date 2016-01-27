@@ -21,7 +21,11 @@ module WhatHappened
       @subscribers.each do |s|
         item = version.item.present? ? version.item : version.reify
         recipient = s.call(item)
-        Notification.create(version: version, recipient: recipient)
+        if recipient.respond_to?(:each)
+          recipient.each { |r| Notification.create(version: version, recipient: r) }
+        else
+          Notification.create(version: version, recipient: recipient)
+        end
       end
     end
   end

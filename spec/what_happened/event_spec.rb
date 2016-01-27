@@ -52,6 +52,19 @@ describe WhatHappened::Event do
       )
       subject
     end
+
+    context "when recipient responds to :each" do
+      before do
+        allow(model_instance).to receive(:recipient) { [ recipient ] }
+      end
+
+      it "creates a notification for each subscriber" do
+        expect(WhatHappened::Notification).to receive(:create).with(
+          hash_including(version: version, recipient: recipient)
+        )
+        subject
+      end
+    end
   end
 
   describe "#add_subscriber" do
