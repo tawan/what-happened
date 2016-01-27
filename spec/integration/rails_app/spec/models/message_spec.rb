@@ -16,17 +16,28 @@ RSpec.describe Message, type: :model do
       end
     end
 
-    it "creates a version" do
-      expect(PaperTrail::Version.all).to be_empty
-      m = create(:message, sender: sender, recipient: recipient)
-      expect(PaperTrail::Version.all.length).to be 1
-      version = PaperTrail::Version.first
-      expect(version.item.id).to eq(m.id)
-    end
-
     it "creates a notification" do
       expect(WhatHappened::Notification.all).to be_empty
       m = create(:message, sender: sender, recipient: recipient)
+      expect(WhatHappened::Notification.all.length).to be 1
+      notification = WhatHappened::Notification.first
+      expect(notification.recipient.id).to eq(recipient.id)
+    end
+  end
+
+  describe "update" do
+    before do
+      mount_new_what_happened_config.specify do
+        updating_message do
+          notifies { |message| message.recipient }
+        end
+      end
+    end
+
+    it "creates a notification" do
+      m = create(:message, sender: sender, recipient: recipient)
+      expect(WhatHappened::Notification.all).to be_empty
+      m.update_attribute(:text, "He, gibt's was Neues?")
       expect(WhatHappened::Notification.all.length).to be 1
       notification = WhatHappened::Notification.first
       expect(notification.recipient.id).to eq(recipient.id)
