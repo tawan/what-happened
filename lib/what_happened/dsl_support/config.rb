@@ -10,6 +10,8 @@ module WhatHappened
       def method_missing(methodId, *args, &spec)
         if m = methodId.to_s.match(/\Acreating_(.+)\z/)
           creating(m[1], spec)
+        elsif m = methodId.to_s.match(/\Aupdating_(.+)\z/)
+          updating(m[1], spec)
         else
           super
         end
@@ -24,6 +26,12 @@ module WhatHappened
         @produced_subscribers = [ ]
         instance_eval(&event_specification)
         track_create(model.to_s.camelize.constantize, @produced_subscribers)
+      end
+
+      def updating(model, event_specification)
+        @produced_subscribers = [ ]
+        instance_eval(&event_specification)
+        track_update(model.to_s.camelize.constantize, @produced_subscribers)
       end
 
       def queue_as(queue_name)

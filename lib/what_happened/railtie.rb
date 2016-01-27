@@ -7,6 +7,9 @@ module WhatHappened
         PaperTrail::Version.after_create do |version|
           app.config.x.what_happened.broadcast(version)
         end
+        PaperTrail::Version.after_update do |version|
+          app.config.x.what_happened.broadcast(version)
+        end
 
         path = File.join(app.root, "config", "what_happened.rb")
         if File.exist?(path)
