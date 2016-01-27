@@ -5,6 +5,13 @@ RSpec.describe Message, type: :model do
   let(:recipient) { create(:user, name: "John") }
   subject { Message.paper_trail_enabled_for_model? }
 
+  before do
+    mount_new_what_happened_config.specify do
+      creating_message do
+        notifies { |message| message.recipient }
+      end
+    end
+  end
   it { is_expected.to be true }
 
   describe "create" do
