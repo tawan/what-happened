@@ -47,5 +47,14 @@ describe WhatHappened::Config do
       expect(event).to receive(:fire).with(version)
       config.broadcast(version)
     end
+
+    context "when muted" do
+      it "suppresses events from firing" do
+        expect(event).not_to receive(:fire).with(version)
+        config.mute do
+          config.broadcast(version)
+        end
+      end
+    end
   end
 end
