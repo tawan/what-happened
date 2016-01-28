@@ -7,10 +7,14 @@ describe WhatHappened::Event do
   let(:event) { WhatHappened::Event.new(model_class, event_name, subscribers) }
   let(:version) { double("version") }
   let(:model_instance) { double("model_instance") }
+  let(:subscriber) { double("subscriber") }
+  let(:recipient) { double("recipient") }
 
   before do
     allow(version).to receive(:item) { model_instance }
     allow(WhatHappened::Notification).to receive(:create)
+    allow(subscriber).to receive(:recipient) { recipient }
+    allow(subscriber).to receive(:label) { :default }
   end
 
   describe "#event_name" do
@@ -37,9 +41,8 @@ describe WhatHappened::Event do
 
   describe "#fire" do
     subject { event.fire(version) }
-    let(:recipient) { double("recipient") }
     let(:subscribers) do
-      [ lambda { |model_instance| model_instance.recipient } ]
+      [ subscriber ]
     end
 
     before do
@@ -69,10 +72,10 @@ describe WhatHappened::Event do
 
   describe "#add_subscriber" do
     subject { event.add_subscriber(subscriber) }
-    let(:subscriber) { double("subscriber") }
 
     it "adds subscriber" do
-      expect(subscriber).to receive(:call).with(model_instance)
+      expect(subscriber).to receive(:recipient).with(model_instance)
+      expect(subscriber).to receive(:label)
       subject
       event.fire(version)
     end

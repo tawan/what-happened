@@ -1,5 +1,18 @@
 module WhatHappened
   module DSLSupport
+    class Subscriber
+      attr_accessor :label
+
+      def initialize(recipient_callback, label = nil)
+        @recipient_callback = recipient_callback
+        self.label = label
+      end
+
+      def recipient(item)
+        @recipient_callback.call(item)
+      end
+    end
+
     module Config
       extend ActiveSupport::Concern
 
@@ -19,8 +32,8 @@ module WhatHappened
         end
       end
 
-      def notifies(&subscriber)
-        @produced_subscribers << subscriber
+      def notifies(&recipient_callback)
+        @produced_subscribers << Subscriber.new(recipient_callback)
       end
 
       def creating(model, event_specification)
@@ -40,6 +53,10 @@ module WhatHappened
 
       def queue_as(queue_name)
         @queue_name = queue_name
+      end
+
+      def label_as(label)
+        @produced_subscribers.last.label = label
       end
 
       private

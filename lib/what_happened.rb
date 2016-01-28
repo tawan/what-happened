@@ -1,3 +1,4 @@
+require 'active_job'
 require 'what_happened/version'
 require 'what_happened/dsl_support/dsl_support'
 require 'what_happened/config'
