@@ -1,6 +1,4 @@
 Rails.application.routes.draw do
-  resources :group_memberships
-  resources :groups
   get '/', controller: :home, action: :index
 
   get 'login/new'
@@ -10,4 +8,5 @@ Rails.application.routes.draw do
   resources :groups do
     resources :group_memberships
   end
+  resources :users
 end
