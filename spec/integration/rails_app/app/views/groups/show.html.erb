@@ -1,0 +1,5 @@
+<p>What happened in group <%= @group.name -%></p>
+
+<% @group.what_happened.each do |notification| %>
+  <%= render(partial: "what_happened/#{notification.label}", locals: {notification.version.item_type.tableize.singularize.to_sym => notification.version.item, :recipient => notification.recipient }) %>
+<% end %>

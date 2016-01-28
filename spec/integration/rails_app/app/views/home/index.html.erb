@@ -1,0 +1,58 @@
+    <div class="container theme-showcase" role="main">
+
+      <!-- Main jumbotron for a primary marketing message or call to action -->
+      <div class="jumbotron">
+        <h1>Demo - What Happened</h1>
+        <p>This is an example application showcasing the functionality of the
+          <a href="https://github.com/tawan/what-happened/"> What Happened gem</a>.
+         </p>
+      </div>
+
+      <div class="row">
+        <div class="col-sm-4">
+          <div class="panel panel-default">
+            <div class="panel-heading">
+              <h3 class="panel-title">Groups</h3>
+            </div>
+            <div class="panel-body">
+              <%- Group.all.each do |g| %>
+              <a href="<%= group_path(g) -%>" class="list-group-item clearfix">
+                <%= g.name -%>
+                <span class="pull-right">
+                  <% if current_user.present? && current_user.groups.include?(g) -%>
+                  <i>already member</i>
+                  <% else -%>
+                  <form role="form" method="post" action="<%= group_group_memberships_path(g) -%>">
+                    <button type="submit" class="btn btn-primary btn-xs">Join group</button>
+                    <input name="authenticity_token" value="<%= form_authenticity_token %>" type="hidden">
+                  </form>
+                  <% end -%>
+                </span>
+              </a>
+              <%- end %>
+            </div>
+          </div>
+        </div><!-- /.col-sm-4 -->
+        <div class="col-sm-4">
+          <div class="panel panel-success">
+            <div class="panel-heading">
+              <h3 class="panel-title">Users</h3>
+            </div>
+            <div class="panel-body">
+              <%- User.all.each do |u| %>
+              <a href="<%= user_path(u) -%>" class="list-group-item clearfix">
+                <%= u.name -%>
+              </a>
+              <%- end %>
+            </div>
+          </div>
+        </div><!-- /.col-sm-4 -->
+        <div class="col-sm-4">
+        </div><!-- /.col-sm-4 -->
+      </div>
+
+      <div class="row">
+        <% config = File.read(File.join(Rails.application.root, "config", "what_happened.rb")) -%>
+        <%= raw(CodeRay.scan(config, :ruby).div(:line_numbers => false))  %>
+      </div>
+    </div> <!-- /container -->

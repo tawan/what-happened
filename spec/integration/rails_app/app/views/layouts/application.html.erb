@@ -1,12 +1,46 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>RailsApp</title>
+<title>What Happened</title>
   <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true %>
   <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
   <%= csrf_meta_tags %>
 </head>
 <body>
+  <!-- Fixed navbar -->
+  <nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="/">Home</a>
+      </div>
+      <div id="navbar" class="navbar-collapse collapse">
+        <ul class="nav navbar-nav">
+          <li>
+            <% if current_user.present? -%>
+            <a href="<%= user_notifications_path(current_user) -%>">
+              My notifications <span class="badge"><%= current_user.what_happened.count -%></span>
+            </a>
+            <% else -%>
+            <a href="<%= new_session_path -%>">
+              Sign in
+            </a>
+            <% end -%>
+          </li>
+          <% if current_user.present? -%>
+          <li>
+            <%= link_to "Sign out! (Signed in as #{current_user.name})",  session_path("current"),  method: :delete %>
+          </li>
+          <% end %>
+        </ul>
+      </div><!--/.nav-collapse -->
+    </div>
+  </nav>
 
 <%= yield %>
 
