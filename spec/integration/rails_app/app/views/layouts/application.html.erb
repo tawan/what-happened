@@ -22,14 +22,20 @@
         <ul class="nav navbar-nav">
           <li>
             <% if current_user.present? -%>
-            <a href="<%= url_for(controller: :login, action: :new) -%>">
-              What Happened? <span class="badge">0</span>
+            <a href="<%= new_session_path -%>">
+              Personal notifications <span class="badge">0</span>
             </a>
             <% else -%>
-            <%= link_to("Logout", controller: :login, action: :new) -%>
+            <a href="<%= new_session_path -%>">
+              Sign in
+            </a>
             <% end -%>
-
           </li>
+          <% if current_user.present? -%>
+          <li>
+            <%= link_to 'Sign out!',  session_path("current"),  method: :delete %>
+          </li>
+          <% end %>
         </ul>
       </div><!--/.nav-collapse -->
     </div>

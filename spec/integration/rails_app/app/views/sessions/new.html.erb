@@ -1,6 +1,6 @@
 <div class="container">
 
-  <form class="form-signin" method="post" action=<%= url_for(controller: :login, action: :login) -%>>
+  <form class="form-signin" method="post" action=<%= sessions_path -%>>
     <h2 class="form-signin-heading">Please sign in</h2>
     <label for="name" class="sr-only">Name</label>
     <input type="name" name="user[name]" id="inputName" class="form-control" placeholder="Name" required autofocus>
