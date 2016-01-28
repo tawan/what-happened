@@ -36,6 +36,7 @@ ActiveRecord::Schema.define(version: 20160126214914) do
     t.integer  "version_id",     null: false
     t.integer  "recipient_id",   null: false
     t.string   "recipient_type", null: false
+    t.string   "label"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
