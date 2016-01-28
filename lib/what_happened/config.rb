@@ -22,9 +22,22 @@ module WhatHappened
     end
 
     def broadcast(version)
-      triggering_events(version).each do |event|
-        event.fire(version)
+      unless mute?
+        triggering_events(version).each do |event|
+          event.fire(version)
+        end
       end
+    end
+
+    def mute?
+      @mute ||= false
+    end
+
+    def mute
+      was_muted = mute?
+      @mute = true
+      yield
+      @mute = was_muted
     end
 
     private
