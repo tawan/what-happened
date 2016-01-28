@@ -149,6 +149,7 @@ PLATFORMS
 
 DEPENDENCIES
   byebug
+  coderay
   factory_girl
   pry-rails
   rails (= 4.2.5)
