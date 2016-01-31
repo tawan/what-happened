@@ -20,11 +20,11 @@ specify do
     notifies { |comment| comment.commentable.users }
     only_if { |comment| comment.commentable.is_a? Group }
     only_if { |comment| comment.creator_id == comment.commentable.organizer_id }
-    label_as :new_comment_in_group
+    label_as :new_comment_by_group_organizer
 
     notifies { |comment| comment.commentable.users }
     only_if { |comment| comment.commentable.is_a? Group }
-    label_as :new_comment_in_group
+    label_as :new_comment_in_group_by_group_member
   end
 end
 ```
