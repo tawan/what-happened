@@ -6,4 +6,8 @@ FactoryGirl.define do
   factory :message do
     text "Hi wie geht's?"
   end
+
+  factory :group do
+    name "Ruby Meetup"
+  end
 end

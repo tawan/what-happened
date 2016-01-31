@@ -27,6 +27,7 @@ require 'rspec/rails'
 ActiveRecord::Migration.maintain_test_schema!
 
 require File.expand_path('./helpers.rb', File.dirname(__FILE__))
+require File.expand_path('./controller_helpers.rb', File.dirname(__FILE__))
 
 RSpec.configure do |config|
   # Remove this line if you're not using ActiveRecord or ActiveRecord fixtures
@@ -59,6 +60,7 @@ RSpec.configure do |config|
   config.include FactoryGirl::Syntax::Methods
 
   config.include Helpers
+  config.include ControllerHelpers, type: :controller
 end
 
 require File.expand_path('../factories', __FILE__)
