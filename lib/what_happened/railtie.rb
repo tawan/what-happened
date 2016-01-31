@@ -17,7 +17,7 @@ module WhatHappened
 
           ActiveRecord::Base.send(:include, WhatHappened::Model)
 
-          path = File.join(app.root, "config", "what_happened.rb")
+          path = File.join(app.root, "config", "notification_routing.rb")
           if File.exist?(path)
             app.config.x.what_happened.instance_eval(File.read(path))
           end

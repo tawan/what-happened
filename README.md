@@ -6,7 +6,7 @@
 ## Usage
 
 ```ruby
-# config/what_happened.rb
+# config/notification_routing.rb
 specify do
   creating_group_membership do
     notifies { |group_membership| group_membership.group.users }
