@@ -68,6 +68,25 @@ describe WhatHappened::Event do
         subject
       end
     end
+
+    context "when multiple subscribers resolve to identical recipient" do
+      let(:subscriber_2) { double("subscriber") }
+      let(:subscribers) do
+        [ subscriber, subscriber_2 ]
+      end
+
+      before do
+        allow(subscriber_2).to receive(:recipient) { recipient }
+        allow(subscriber_2).to receive(:label) { :default }
+      end
+
+      it "creates only one notification" do
+        expect(WhatHappened::Notification).to receive(:create).with(
+          hash_including(version: version, recipient: recipient)
+        ).exactly(1).times
+        subject
+      end
+    end
   end
 
   describe "#add_subscriber" do
