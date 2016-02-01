@@ -5,14 +5,32 @@ module WhatHappened
 
       def initialize(label)
         @label = label
+        @condition_callbacks = [ Proc.new { true } ]
       end
 
       def recipient(item)
         @recipient_callback.call(item)
       end
 
+      def except_if(&condition_callback_inversed)
+        @condition_callbacks << Proc.new do |*args|
+          !condition_callback_inversed.call(*args)
+        end
+      end
+
+      def only_if(&condition_callback)
+        @condition_callbacks << condition_callback
+      end
+
       def to(&recipient_callback)
         @recipient_callback = recipient_callback
+      end
+
+      def conditions(recipient = nil, item = nil)
+        @condition_callbacks.each do |c|
+          return false unless c.call(recipient, item)
+        end
+        true
       end
     end
 

@@ -10,4 +10,10 @@ FactoryGirl.define do
   factory :group do
     name "Ruby Meetup"
   end
+
+  factory :group_membership do
+    user
+    group
+    organizer false
+  end
 end

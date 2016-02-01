@@ -27,7 +27,7 @@ module WhatHappened
           recipient = [ recipient ]
         end
         recipient.each do |r|
-          unless recipients.include?(r)
+          unless recipients.include?(r) || !s.conditions(r, item)
             Notification.create(version: version, recipient: r, label: label)
             recipients << r
           end

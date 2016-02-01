@@ -44,6 +44,58 @@ describe WhatHappened::DSLSupport::Config do
       )
       config.broadcast(version)
     end
+
+    describe "except_if" do
+      let(:specification) do
+        Proc.new do
+          creating_message do
+            sends_notification :new_message_in_inbox do
+              to { |message| message.recipient }
+              except_if { |recipient, message| true }
+            end
+          end
+        end
+      end
+
+      it "adds a condition_callback to subscriber" do
+        config.specify &specification
+        expect(WhatHappened::Notification).not_to receive(:create).with(
+          hash_including(
+            version: version,
+            recipient: recipient,
+            label: :new_message_in_inbox
+          )
+        )
+
+        config.broadcast(version)
+      end
+    end
+
+    describe "only_if" do
+      let(:specification) do
+        Proc.new do
+          creating_message do
+            sends_notification :new_message_in_inbox do
+              to { |message| message.recipient }
+              only_if { |recipient, message| false }
+            end
+          end
+        end
+      end
+
+      it "adds a condition_callback to subscriber" do
+        config.specify &specification
+        expect(WhatHappened::Notification).not_to receive(:create).with(
+          hash_including(
+            version: version,
+            recipient: recipient,
+            label: :new_message_in_inbox
+          )
+        )
+
+        config.broadcast(version)
+      end
+    end
   end
 
   describe "queue_as" do

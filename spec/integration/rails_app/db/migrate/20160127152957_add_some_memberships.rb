@@ -1,8 +1,10 @@
 class AddSomeMemberships < ActiveRecord::Migration
   def change
     Rails.application.config.x.what_happened.mute do
-      Group.first.users << User.first
-      Group.last.users << User.last
+      users = User.all.to_a
+      Group.all.each do |g|
+        GroupMembership.create(user: users.pop, group: g, organizer: true)
+      end
     end
   end
 end

@@ -16,6 +16,7 @@ ActiveRecord::Schema.define(version: 20160127152957) do
   create_table "group_memberships", force: :cascade do |t|
     t.integer "user_id"
     t.integer "group_id"
+    t.boolean "organizer", default: false
   end
 
   create_table "groups", force: :cascade do |t|

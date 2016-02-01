@@ -15,6 +15,7 @@ describe WhatHappened::Event do
     allow(WhatHappened::Notification).to receive(:create)
     allow(subscriber).to receive(:recipient) { recipient }
     allow(subscriber).to receive(:label) { :default }
+    allow(subscriber).to receive(:conditions) { true }
   end
 
   describe "#event_name" do
@@ -56,6 +57,19 @@ describe WhatHappened::Event do
       subject
     end
 
+    context "when condition callback resolves to false" do
+      before do
+        allow(subscriber).to receive(:conditions) { false }
+      end
+
+      it "does not create a notification" do
+        expect(WhatHappened::Notification).not_to receive(:create).with(
+          hash_including(version: version, recipient: recipient)
+        )
+        subject
+      end
+    end
+
     context "when recipient responds to :each" do
       before do
         allow(model_instance).to receive(:recipient) { [ recipient ] }
@@ -78,6 +92,7 @@ describe WhatHappened::Event do
       before do
         allow(subscriber_2).to receive(:recipient) { recipient }
         allow(subscriber_2).to receive(:label) { :default }
+        allow(subscriber_2).to receive(:conditions) { true }
       end
 
       it "creates only one notification" do
