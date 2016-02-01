@@ -36,11 +36,7 @@ end
 ```
 
 Notifications can be disabled with following config setting:
-
 ```ruby
-# disable What Happened notifications in the test environment
-
-# config/environments/test.rb
 Rails.application.configure do
   # ..
   config.what_happened.disabled = true
