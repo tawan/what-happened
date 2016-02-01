@@ -23,17 +23,13 @@ module WhatHappened
         item = version.item.present? ? version.item : version.reify
         recipient = s.recipient(item)
         label = s.label
-        if recipient.respond_to?(:each)
-          recipient.each do |r|
-            unless recipients.include?(r)
-              Notification.create(version: version, recipient: r, label: label)
-              recipients << r
-            end
-          end
-        else
-          unless recipients.include?(recipient)
-            Notification.create(version: version, recipient: recipient, label: label)
-            recipients << recipient
+        unless recipient.respond_to?(:each)
+          recipient = [ recipient ]
+        end
+        recipient.each do |r|
+          unless recipients.include?(r)
+            Notification.create(version: version, recipient: r, label: label)
+            recipients << r
           end
         end
       end

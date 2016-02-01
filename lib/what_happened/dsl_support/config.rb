@@ -1,15 +1,18 @@
 module WhatHappened
   module DSLSupport
     class Subscriber
-      attr_accessor :label
+      attr_reader :label
 
-      def initialize(recipient_callback, label = nil)
-        @recipient_callback = recipient_callback
-        self.label = label
+      def initialize(label)
+        @label = label
       end
 
       def recipient(item)
         @recipient_callback.call(item)
+      end
+
+      def to(&recipient_callback)
+        @recipient_callback = recipient_callback
       end
     end
 
@@ -32,9 +35,6 @@ module WhatHappened
         end
       end
 
-      def notifies(&recipient_callback)
-        @produced_subscribers << Subscriber.new(recipient_callback)
-      end
 
       def creating(model, event_specification)
         run_event_specification(event_specification)
@@ -55,8 +55,10 @@ module WhatHappened
         @queue_name = queue_name
       end
 
-      def label_as(label)
-        @produced_subscribers.last.label = label
+      def sends_notification(label, &subscriber_specifiation)
+        subscriber = Subscriber.new(label)
+        subscriber.instance_eval(&subscriber_specifiation)
+        @produced_subscribers << subscriber
       end
 
       private

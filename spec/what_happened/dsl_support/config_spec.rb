@@ -6,7 +6,9 @@ describe WhatHappened::DSLSupport::Config do
   let(:specification) do
     Proc.new do
       creating_message do
-        notifies { |message| message.recipient }
+        sends_notification :new_message_in_inbox do
+          to { |message| message.recipient }
+        end
       end
     end
   end
@@ -30,11 +32,15 @@ describe WhatHappened::DSLSupport::Config do
     end
   end
 
-  describe "notifies" do
+  describe "sends_notification" do
     it "creates a subscriber" do
       config.specify &specification
       expect(WhatHappened::Notification).to receive(:create).with(
-        hash_including(version: version, recipient: recipient)
+        hash_including(
+          version: version,
+          recipient: recipient,
+          label: :new_message_in_inbox
+        )
       )
       config.broadcast(version)
     end
@@ -48,25 +54,6 @@ describe WhatHappened::DSLSupport::Config do
     it "returns declared queue name" do
       config.specify &specification
       expect(config.queue_name).to eq(:other_name)
-    end
-  end
-
-  describe "label_as" do
-    let(:specification) do
-      Proc.new do
-        creating_message do
-          notifies { |message| message.recipient }
-          label_as :new_message
-        end
-      end
-    end
-
-    it "labels notification" do
-      expect(WhatHappened::Notification).to receive(:create).with(
-        hash_including(version: version, recipient: recipient, label: :new_message)
-      )
-      config.specify &specification
-      config.broadcast(version)
     end
   end
 end
