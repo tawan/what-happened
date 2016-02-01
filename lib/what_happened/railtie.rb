@@ -21,7 +21,12 @@ module WhatHappened
 
           path = File.join(app.root, "config", "notification_routing.rb")
           if File.exist?(path)
-            WhatHappened.config.instance_eval(File.read(path))
+            specification = <<-SPEC
+              specify do
+                #{File.read(path)}
+              end
+            SPEC
+            WhatHappened.config.instance_eval(specification)
           end
         end
       end
