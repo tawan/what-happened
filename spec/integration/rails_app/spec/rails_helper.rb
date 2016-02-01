@@ -5,6 +5,8 @@ require File.expand_path('../../config/environment', __FILE__)
 abort("The Rails environment is running in production mode!") if Rails.env.production?
 require 'spec_helper'
 require 'rspec/rails'
+require 'rails/generators'
+require 'rake'
 # Add additional requires below this line. Rails is not loaded until this point!
 
 # Requires supporting ruby files with custom matchers and macros, etc, in
@@ -61,6 +63,19 @@ RSpec.configure do |config|
 
   config.include Helpers
   config.include ControllerHelpers, type: :controller
+
+  config.before(:suite) do
+    Dir.chdir(File.expand_path('..', File.dirname(__FILE__))) do
+      Dir.glob("db/migrate/**.rb").each do |f|
+        FileUtils.rm(f) if f =~ /.*(create_versions|add_object_changes).*/
+      end
+      Rails::Generators::Base.new.generate("paper_trail:install", "--with-changes")
+      Rails.application.load_tasks
+      Rake::Task["db:drop"].invoke
+      Rake::Task["db:create"].invoke
+      Rake::Task["db:migrate"].invoke
+    end
+  end
 end
 
 require File.expand_path('../factories', __FILE__)
