@@ -13,16 +13,16 @@
 
 ActiveRecord::Schema.define(version: 20160127152957) do
 
-  create_table "group_memberships", force: :cascade do |t|
-    t.integer "user_id"
-    t.integer "group_id"
-    t.boolean "organizer", default: false
-  end
-
   create_table "groups", force: :cascade do |t|
     t.string   "name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "memberships", force: :cascade do |t|
+    t.integer "user_id"
+    t.integer "group_id"
+    t.boolean "organizer", default: false
   end
 
   create_table "messages", force: :cascade do |t|

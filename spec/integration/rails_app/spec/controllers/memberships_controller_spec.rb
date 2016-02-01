@@ -1,12 +1,12 @@
 require File.expand_path('../../rails_helper', __FILE__)
 
-RSpec.describe GroupMembershipsController, type: :controller do
+RSpec.describe MembershipsController, type: :controller do
   let(:group) { create(:group) }
   let(:new_member)  { create(:user) }
   let(:existing_member) { create(:user) }
   before do
     login(new_member.id)
-    create(:group_membership, user: existing_member, group: group, organizer: true)
+    create(:membership, user: existing_member, group: group, organizer: true)
   end
 
   describe "POST create" do

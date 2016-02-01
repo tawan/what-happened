@@ -5,7 +5,7 @@ class CreateGroups < ActiveRecord::Migration
       t.timestamps null: false
     end
 
-    create_table :group_memberships do |t|
+    create_table :memberships do |t|
       t.integer :user_id
       t.integer :group_id
       t.boolean :organizer, default: false

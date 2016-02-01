@@ -3,7 +3,7 @@ Rails.application.routes.draw do
   get '/', controller: :home, action: :index
 
   resources :groups do
-    resources :group_memberships
+    resources :memberships
   end
   resources :users do
     resources :notifications

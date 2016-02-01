@@ -1,4 +1,4 @@
-class GroupMembershipsController < ApplicationController
+class MembershipsController < ApplicationController
   before_filter :authorize
 
   def create

@@ -22,7 +22,7 @@
                   <% if current_user.present? && current_user.groups.include?(g) -%>
                   <i>already member</i>
                   <% else -%>
-                  <form role="form" method="post" action="<%= group_group_memberships_path(g) -%>">
+                  <form role="form" method="post" action="<%= group_memberships_path(g) -%>">
                     <button type="submit" class="btn btn-primary btn-xs">Join group</button>
                     <input name="authenticity_token" value="<%= form_authenticity_token %>" type="hidden">
                   </form>
