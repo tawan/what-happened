@@ -2,6 +2,21 @@
 
 [![Build Status](https://travis-ci.org/tawan/what-happened.svg?branch=master)](https://travis-ci.org/tawan/what-happened)
 
+## Installation
+
+1. Add *What Happened* to your `Gemfile`.
+
+    ```ruby
+    gem 'what_happened', :git => 'https://github.com/tawan/what-happened.git', :branch => 'master'
+    ```
+
+1. Add a `versions` and `notifications` table to your database.
+
+    ```bash
+    bundle exec rails generate paper_trail:install --with-changes
+    bundle exec rails generate what_happened:install
+    bundle exec rake db:migrate
+    ```
 
 ## Usage
 

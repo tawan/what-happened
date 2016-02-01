@@ -67,9 +67,10 @@ RSpec.configure do |config|
   config.before(:suite) do
     Dir.chdir(File.expand_path('..', File.dirname(__FILE__))) do
       Dir.glob("db/migrate/**.rb").each do |f|
-        FileUtils.rm(f) if f =~ /.*(create_versions|add_object_changes).*/
+        FileUtils.rm(f) if f =~ /.*(create_versions|add_object_changes|create_notifications).*/
       end
       Rails::Generators::Base.new.generate("paper_trail:install", "--with-changes")
+      Rails::Generators::Base.new.generate("what_happened:install")
       Rails.application.load_tasks
       Rake::Task["db:drop"].invoke
       Rake::Task["db:create"].invoke
