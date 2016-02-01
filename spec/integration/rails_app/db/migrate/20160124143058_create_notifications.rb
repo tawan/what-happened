@@ -5,7 +5,7 @@ class CreateNotifications < ActiveRecord::Migration
       t.integer  :recipient_id, :null => false
       t.string   :recipient_type, :null => false
       t.string   :label
-      t.timestamps
+      t.timestamps :null => false
     end
   end
 end
