@@ -52,7 +52,7 @@
       </div>
 
       <div class="row">
-        <% config = File.read(File.join(Rails.application.root, "config", "what_happened.rb")) -%>
+        <% config = File.read(File.join(Rails.application.root, "config", "notification_routing.rb")) -%>
         <%= raw(CodeRay.scan(config, :ruby).div(:line_numbers => false))  %>
       </div>
     </div> <!-- /container -->
