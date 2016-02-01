@@ -1,6 +1,6 @@
 class AddSomeGroups < ActiveRecord::Migration
   def change
-    Rails.application.config.x.what_happened.mute do
+    WhatHappened.config.mute do
       [ "Ruby Meetup", "Snowboad Enthusiasts", "Railscamp", "Chess Club" ].each do |n|
         Group.create(name: n)
       end

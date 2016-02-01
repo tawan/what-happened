@@ -1,3 +1,12 @@
+module WhatHappened
+  def self.config=(config)
+    @config = config
+  end
+
+  def self.config
+    @config
+  end
+end
 require 'active_job'
 require 'what_happened/version'
 require 'what_happened/dsl_support/dsl_support'
