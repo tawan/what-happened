@@ -121,4 +121,30 @@ describe WhatHappened::Event do
       event.fire(version)
     end
   end
+
+  describe "#skip_attributes" do
+    let(:skipped_attributes) { [ :created_at, :updated_at ] }
+    let(:event_name) { "update" }
+    before do
+      allow(version).to receive(:changeset) { changeset }
+      event.skip_attributes(*skipped_attributes)
+    end
+
+    subject { event.fires?(version) }
+
+    context "when skipped attributes include all changed attributes" do
+      let(:changeset) { { "created_at" => [], "updated_at" => [] } }
+      it { is_expected.to be false }
+    end
+
+    context "when skipped attributes intersects with changed_attributes" do
+      let(:changeset) { { "created_at" => [], "name" => [] } }
+      it { is_expected.to be true }
+    end
+
+    context "when skipped attributes does not overlap with changed_attributes" do
+      let(:changeset) { { "name" => [] } }
+      it { is_expected.to be true }
+    end
+  end
 end

@@ -33,6 +33,14 @@ creating_membership do
     except_if { |recipient, membership| membership.organizer }
   end
 end
+
+updating_group do
+  skip_attributes(:created_at, :updated_at)
+
+  sends_notification :group_was_renamed do
+    to { |group| [ group.users, group ] }
+  end
+end
 ```
 
 Notifications can be disabled with following config setting:

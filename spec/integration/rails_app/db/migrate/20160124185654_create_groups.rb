@@ -9,6 +9,7 @@ class CreateGroups < ActiveRecord::Migration
       t.integer :user_id
       t.integer :group_id
       t.boolean :organizer, default: false
+      t.timestamps null: false
     end
   end
 end

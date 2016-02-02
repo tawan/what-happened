@@ -13,8 +13,8 @@ module WhatHappened
       track(:create, model_class, event_subscribers)
     end
 
-    def track_update(model_class, event_subscribers = nil)
-      track(:update, model_class, event_subscribers)
+    def track_update(model_class, event_subscribers = nil, skip_attributes = nil)
+      track(:update, model_class, event_subscribers, skip_attributes)
     end
 
     def track_destroy(model_class, event_subscribers = nil)
@@ -42,9 +42,11 @@ module WhatHappened
 
     private
 
-    def track(event_name, model_class, event_subscribers = nil)
+    def track(event_name, model_class, event_subscribers = nil, skip_attributes = nil)
       paper_trail_on(event_name, model_class)
-      @events << Event.new(model_class, event_name, event_subscribers)
+      event = Event.new(model_class, event_name, event_subscribers)
+      event.skip_attributes(*skip_attributes) unless skip_attributes.nil?
+      @events << event
     end
 
     def triggering_events(version)

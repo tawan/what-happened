@@ -10,3 +10,11 @@ creating_membership do
     except_if { |recipient, membership| membership.organizer }
   end
 end
+
+updating_membership do
+  skip_attribute(:updated_at)
+
+  sends_notification :organizer_changed do
+    to { |membership| membership.group }
+  end
+end

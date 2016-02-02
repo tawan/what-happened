@@ -6,15 +6,25 @@ module WhatHappened
       @model_class = model_class
       @event_name = event_name
       @subscribers = subscribers
+      @skip_attributes = [ ]
     end
 
     def fires?(version)
       return false unless version.item_type.constantize == @model_class
-      version.event == self.event_name.to_s
+      return false unless version.event == self.event_name.to_s
+      if version.event == "update"
+        changed_attributes = version.changeset.keys.collect(&:to_s)
+        return false if (changed_attributes - @skip_attributes).empty?
+      end
+      true
     end
 
     def add_subscriber(subscriber)
       @subscribers << subscriber
+    end
+
+    def skip_attributes(*attributes)
+      @skip_attributes = attributes.collect(&:to_s)
     end
 
     def fire(version)

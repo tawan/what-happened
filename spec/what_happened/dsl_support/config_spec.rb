@@ -30,6 +30,26 @@ describe WhatHappened::DSLSupport::Config do
       expect(config).to receive(:track_create).with(message_class, anything)
       config.specify &specification
     end
+
+    describe "skip_attributes" do
+      let(:specification) do
+        Proc.new do
+          updating_message do
+            skip_attributes(:created_at, :updated_at)
+          end
+        end
+      end
+      let(:event) { double("event").as_null_object }
+
+      before do
+        allow(WhatHappened::Event).to receive(:new) { event }
+      end
+
+      it "adds skipped attributes to event" do
+        expect(event).to receive(:skip_attributes).with(:created_at, :updated_at)
+        config.specify &specification
+      end
+    end
   end
 
   describe "sends_notification" do
