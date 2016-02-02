@@ -48,7 +48,7 @@ module WhatHappened
     end
 
     def triggering_events(version)
-      @events.select { |e| e.fires?(version.item_type.constantize, version.event) }
+      @events.select { |e| e.fires?(version) }
     end
 
     def paper_trail_on(event_name, model_class)

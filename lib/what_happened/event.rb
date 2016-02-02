@@ -8,9 +8,9 @@ module WhatHappened
       @subscribers = subscribers
     end
 
-    def fires?(model_class, event_name)
-      return false unless model_class == @model_class
-      event_name.to_s == self.event_name.to_s
+    def fires?(version)
+      return false unless version.item_type.constantize == @model_class
+      version.event == self.event_name.to_s
     end
 
     def add_subscriber(subscriber)

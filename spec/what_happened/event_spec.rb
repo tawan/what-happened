@@ -9,9 +9,13 @@ describe WhatHappened::Event do
   let(:model_instance) { double("model_instance") }
   let(:subscriber) { double("subscriber") }
   let(:recipient) { double("recipient") }
+  let(:item_type) { double("item_type") }
 
   before do
     allow(version).to receive(:item) { model_instance }
+    allow(version).to receive(:item_type) { item_type }
+    allow(item_type).to receive(:constantize) { model_class }
+    allow(version).to receive(:event) { event_name }
     allow(WhatHappened::Notification).to receive(:create)
     allow(subscriber).to receive(:recipient) { recipient }
     allow(subscriber).to receive(:label) { :default }
@@ -25,17 +29,20 @@ describe WhatHappened::Event do
   end
 
   describe "#fires?" do
-    subject { event.fires?(model_class, current_event_name) }
+    subject { event.fires?(version) }
     context "when model_class and event name match" do
-      let(:current_event_name) { event_name }
-      let(:current_model_class) { message_class }
-
       it { is_expected.to be true }
     end
 
     context "when current event name differs from event's event name" do
-      let(:current_event_name) { "update" }
+      before { allow(version).to receive(:event) { "update" } }
+      it { is_expected.to be false }
+    end
 
+    context "when current model class differs from event's model class" do
+      before do
+        allow(version).to receive(:item_type) { double("other class").as_null_object }
+      end
       it { is_expected.to be false }
     end
   end
