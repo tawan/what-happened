@@ -1,0 +1,27 @@
+<p>What happened in meeting <%= @meeting.name -%></p>
+<% if @edit %>
+<%= render partial: 'form', locals: { group: @meeting.group, edit: true, url: group_meeting_path(@meeting.group, @meeting), meeting: @meeting } %>
+<% else %>
+<a class="btn btn-default" href="<%= edit_group_meeting_path(@meeting.group, @meeting) -%>" role="button">Edit</a>
+<% end %>
+<div class="row">
+  <div class="col-sm-4">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title">Participants</h3>
+      </div>
+      <div class="panel-body">
+        <%- @meeting.participants.each do |p| %>
+        <a href="<%= user_path(p) -%>" class="list-group-item clearfix">
+          <%= p.name -%>
+          <span class="pull-right">
+          </span>
+        </a>
+        <%- end %>
+      </div>
+    </div>
+  </div><!-- /.col-sm-4 -->
+</div>
+<% @meeting.what_happened.each do |notification| %>
+  <%= render(partial: "what_happened/#{notification.label}", locals: {notification.version.item_type.tableize.singularize.to_sym => notification.version.item, :recipient => notification.recipient }) %>
+<% end %>

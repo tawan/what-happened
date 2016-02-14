@@ -1,0 +1,58 @@
+<form class="form-horizontal" method="post" action=<%= url -%>>
+  <% if edit %>
+  <input name="_method" type="hidden" value="put" />
+  <%
+    @meeting_name = meeting.name
+    @meeting_description = meeting.description
+    @meeting_starts_at = meeting.starts_at.to_date.to_formatted_s(:iso8601) if meeting.starts_at
+    @meeting_ends_at = meeting.ends_at.to_date.to_formatted_s(:iso8601) if meeting.ends_at
+  %>
+  <% end %>
+  <input name="authenticity_token" value="<%= form_authenticity_token %>" type="hidden">
+  <div class="form-group">
+    <label for="name" class="col-sm-2 control-label">Name</label>
+    <div class="col-sm-5">
+      <input type="text" placeholder="Name" class="form-control" id="name" name="meeting[name]" value="<%= @meeting_name %>">
+    </div>
+  </div>
+  <div class="form-group">
+    <label for="description" class="col-sm-2 control-label">Description</label>
+    <div class="col-sm-5">
+      <textarea class="form-control" id="description" name="meeting[description]"><%= @meeting_description %></textarea>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label for="datetimepicker_starts_at" class="col-sm-2 control-label">Starts At</label>
+    <div class="col-sm-5" class='input-group date' id='datetimepicker_starts_at'>
+      <input type='text' id="starts_at" name="meeting[starts_at]" class="form-control" value="<%= @meeting_starts_at %>" />
+    </div>
+  </div>
+  <script type="text/javascript">
+  $(function () {
+    $('#starts_at').datepicker({
+      format: 'yyyy-mm-dd'
+    });
+  });
+  </script>
+  <div class="form-group">
+    <label for="datetimepicker_ends_at" class="col-sm-2 control-label">Ends At</label>
+    <div class="col-sm-5" class='input-group date' id='datetimepicker_ends_at'>
+      <input type='text' id="ends_at" name="meeting[ends_at]" class="form-control" value="<%= @meeting_ends_at %>" />
+    </div>
+  </div>
+  <script type="text/javascript">
+    $('#ends_at').datepicker({
+      format: 'yyyy-mm-dd'
+    });
+  </script>
+  <div class="form-group">
+    <div class="col-sm-offset-2 col-sm-10">
+      <% if edit %>
+      <button type="submit" class="btn btn-default">Update</button>
+      <% else %>
+      <button type="submit" class="btn btn-default">Create</button>
+      <% end %>
+    </div>
+  </div>
+</form>

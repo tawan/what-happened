@@ -13,6 +13,7 @@
  *= require_tree .
  *= require_self
  */
-*= require bootstrap.min
+*= require bootstrap
 *= require signin
 *= require theme
+*= require datepicker

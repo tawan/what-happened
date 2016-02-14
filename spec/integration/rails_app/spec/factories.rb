@@ -1,5 +1,5 @@
 FactoryGirl.define do
-  factory :user do
+  factory :user, aliases: [:creator] do
     name "John"
   end
 
@@ -14,6 +14,25 @@ FactoryGirl.define do
   factory :membership do
     user
     group
-    organizer false
+  end
+
+  factory :meeting do
+    creator
+    group
+  end
+
+  factory :participant, parent: :user do
+    transient do
+      meeting create(:meeting)
+    end
+
+    after(:create) do |participant, evaluator|
+      create(:participation, user: participant, meeting: evaluator.meeting)
+    end
+  end
+
+  factory :participation do
+    user
+    meeting
   end
 end

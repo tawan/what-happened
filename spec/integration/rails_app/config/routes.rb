@@ -4,6 +4,10 @@ Rails.application.routes.draw do
 
   resources :groups do
     resources :memberships
+    
+    resources :meetings do
+      resources :participations
+    end
   end
   resources :users do
     resources :notifications

@@ -1,5 +1,40 @@
 <p>What happened in group <%= @group.name -%></p>
-
+<div class="panel panel-success">
+  <div class="panel-heading">
+    <h3 class="panel-title">Meetings</h3>
+  </div>
+  <div class="panel-body">
+    <table class="table">
+      <tr>
+        <th>Name</th>
+        <th>Starts At
+        </th><th>Ends At</th>
+      </tr>
+      <%- @group.meetings.each do |m| %>
+      <tr>
+        <td>
+          <a href="<%= group_meeting_path(@group, m) -%>" class="list-group-item clearfix">
+            <%= m.name -%>
+            <span class="pull-right">
+              <% if current_user.present? && current_user.meetings.include?(m) -%>
+              <i>participating</i>
+              <% else -%>
+              <form role="form" method="post" action="<%= group_meeting_participations_path(@group, m) -%>">
+                <button type="submit" class="btn btn-primary btn-xs">Participate</button>
+                <input name="authenticity_token" value="<%= form_authenticity_token %>" type="hidden">
+              </form>
+              <% end -%>
+            </span>
+          </a>
+        </td>
+        <td><%= m.starts_at.try(:to_date).try(:to_formatted_s, :iso8601) %></td>
+        <td><%= m.ends_at.try(:to_date).try(:to_formatted_s, :iso8601) %></td>
+      </tr>
+      <%- end %>
+    </table>
+  </div>
+</div>
+<a class="btn btn-default" href="<%= new_group_meeting_path(@group) -%>" role="button">Schedule Meeting</a>
 <% @group.what_happened.each do |notification| %>
   <%= render(partial: "what_happened/#{notification.label}", locals: {notification.version.item_type.tableize.singularize.to_sym => notification.version.item, :recipient => notification.recipient }) %>
 <% end %>
