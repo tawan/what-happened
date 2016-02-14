@@ -29,9 +29,9 @@ RSpec.describe Message, type: :model do
     end
 
     it "creates a notification" do
-      expect(WhatHappened::Notification.all).to be_empty
-      m = create(:message, sender: sender, recipient: recipient)
-      expect(recipient.what_happened.all.length).to be 1
+      expect {
+        create(:message, sender: sender, recipient: recipient)
+      }.to notify(recipient).about(:new_message_in_inbox)
     end
   end
 
@@ -48,9 +48,9 @@ RSpec.describe Message, type: :model do
 
     it "creates a notification" do
       m = create(:message, sender: sender, recipient: recipient)
-      expect(WhatHappened::Notification.all).to be_empty
-      m.update_attribute(:text, "He, gibt's was Neues?")
-      expect(recipient.what_happened.all.length).to be 1
+      expect {
+        m.update_attribute(:text, "He, gibt's was Neues?")
+      }.to notify(recipient).about(:message_in_inbox_has_been_updated)
     end
   end
 
@@ -67,9 +67,7 @@ RSpec.describe Message, type: :model do
 
     it "creates a notification" do
       m = create(:message, sender: sender, recipient: recipient)
-      expect(WhatHappened::Notification.all).to be_empty
-      m.destroy
-      expect(recipient.what_happened.all.length).to be 1
+      expect { m.destroy }.to notify(recipient).about(:message_has_been_deleted)
     end
   end
 end

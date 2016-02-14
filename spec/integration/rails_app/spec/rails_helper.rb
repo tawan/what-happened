@@ -79,4 +79,48 @@ RSpec.configure do |config|
   end
 end
 
+RSpec::Matchers.define :notify do |expected|
+  match do |actual|
+    before = expected.what_happened.to_a
+    actual.call
+    if expected.what_happened.count <= before.size
+      return false
+    end
+
+    if @about
+      old_ids = before.collect(&:id)
+      new_notifications = expected.what_happened.to_a.select do |n|
+        !old_ids.include?(n.id)
+      end
+
+      unless new_notifications.collect(&:label).include?(@about.to_s)
+        return false
+      end
+    end
+    return true
+  end
+
+  chain :about do |about|
+    @about = about
+  end
+
+  failure_message do |actual|
+    s = "expected that #{expected.inspect} would be notified"
+    if @about
+      s << " about #{@about}"
+    end
+    s << ", but wasn't."
+  end
+
+  failure_message_when_negated do |actual|
+    s = "expected that #{expected.inspect} would not be notified"
+    if @about
+      s << " about #{@about}"
+    end
+    s << ", but it was."
+  end
+
+  supports_block_expectations
+end
+
 require File.expand_path('../factories', __FILE__)
