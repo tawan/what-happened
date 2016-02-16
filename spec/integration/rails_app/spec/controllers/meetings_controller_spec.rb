@@ -12,15 +12,16 @@ RSpec.describe MeetingsController, type: :controller do
   end
 
   describe "POST create" do
+    let(:meeting_params) { { name: "Test" } }
     it "notifies the group's members" do
       expect {
-        post :create, group_id: group.id
+        post :create, group_id: group.id, meeting: meeting_params
       }.to notify(another_member).about(:new_meeting_announced)
     end
 
     it "does not notify the meetings creator" do
       expect {
-        post :create, group_id: group.id
+        post :create, group_id: group.id, meeting: meeting_params
       }.not_to notify(creator).about(:new_meeting_announced)
     end
   end
