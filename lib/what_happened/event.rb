@@ -24,7 +24,7 @@ module WhatHappened
     end
 
     def skip_attributes(*attributes)
-      @skip_attributes = attributes.collect(&:to_s)
+      @skip_attributes = attributes.flatten.collect(&:to_s)
     end
 
     def fire(version)

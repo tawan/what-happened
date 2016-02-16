@@ -125,12 +125,20 @@ describe WhatHappened::Event do
   describe "#skip_attributes" do
     let(:skipped_attributes) { [ :created_at, :updated_at ] }
     let(:event_name) { "update" }
+
     before do
       allow(version).to receive(:changeset) { changeset }
       event.skip_attributes(*skipped_attributes)
     end
 
     subject { event.fires?(version) }
+
+    context "when skipped_attributes is an array" do
+      let(:skipped_attributes) { [ [:created_at, :updated_at] ] }
+      let(:changeset) { { "created_at" => [], "updated_at" => [] } }
+
+      it { is_expected.to be false }
+    end
 
     context "when skipped attributes include all changed attributes" do
       let(:changeset) { { "created_at" => [], "updated_at" => [] } }
