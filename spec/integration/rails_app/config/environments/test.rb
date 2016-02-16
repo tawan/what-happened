@@ -39,4 +39,9 @@ Rails.application.configure do
 
   # Raises error for missing translations
   # config.action_view.raise_on_missing_translations = true
+
+  # Test examples are wrapped in transactions, therefore
+  # we need to hook the broadcast job callback on the `after_*` callbacks
+  # instead of the `after_commit`
+  config.what_happened.after_commit = false
 end
