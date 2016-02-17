@@ -5,12 +5,10 @@ RSpec.describe Message, type: :model do
   let(:recipient) { create(:user, name: "John") }
   subject { Message.paper_trail_enabled_for_model? }
 
-  before do
-    mount_new_what_happened_config.specify do
-      creating_message do
-        sends_notification :new_message_in_inbox do
-          to { |message| message.recipient }
-        end
+  with_notification_routing do
+    creating_message do
+      sends_notification :new_message_in_inbox do
+        to { |message| message.recipient }
       end
     end
   end
@@ -18,12 +16,10 @@ RSpec.describe Message, type: :model do
   it { is_expected.to be true }
 
   describe "create" do
-    before do
-      mount_new_what_happened_config.specify do
-        creating_message do
-          sends_notification :new_message_in_inbox do
-            to { |message| message.recipient }
-          end
+    with_notification_routing do
+      creating_message do
+        sends_notification :new_message_in_inbox do
+          to { |message| message.recipient }
         end
       end
     end
@@ -36,12 +32,10 @@ RSpec.describe Message, type: :model do
   end
 
   describe "update" do
-    before do
-      mount_new_what_happened_config.specify do
-        updating_message do
-          sends_notification :message_in_inbox_has_been_updated do
-            to { |message| message.recipient }
-          end
+    with_notification_routing do
+      updating_message do
+        sends_notification :message_in_inbox_has_been_updated do
+          to { |message| message.recipient }
         end
       end
     end
@@ -55,12 +49,10 @@ RSpec.describe Message, type: :model do
   end
 
   describe "destroy" do
-    before do
-      mount_new_what_happened_config.specify do
-        destroying_message do
-          sends_notification :message_has_been_deleted do
-            to { |message| message.recipient }
-          end
+    with_notification_routing do
+      destroying_message do
+        sends_notification :message_has_been_deleted do
+          to { |message| message.recipient }
         end
       end
     end

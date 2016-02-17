@@ -1,12 +1,19 @@
+require 'what_happened/config_registry'
+
 module WhatHappened
   def self.config=(config)
     @config = config
   end
 
   def self.config
-    @config
+    if ConfigRegistry.config
+      return ConfigRegistry.config
+    else
+      return @config
+    end
   end
 end
+
 require 'active_job'
 require 'what_happened/version'
 require 'what_happened/dsl_support/dsl_support'
