@@ -17,6 +17,7 @@ FactoryGirl.define do
   end
 
   factory :meeting do
+    name "Monthly meetup"
     creator
     group
   end

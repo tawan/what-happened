@@ -1,6 +1,18 @@
 <p>What happened in group <%= @group.name -%></p>
 <div class="panel panel-success">
   <div class="panel-heading">
+    <h3 class="panel-title">Members</h3>
+  </div>
+  <div class="panel-body">
+    <%- @group.users.each do |u| %>
+    <a href="<%= user_path(u) -%>" class="list-group-item clearfix">
+      <%= u.name -%>
+    </a>
+    <%- end %>
+  </div>
+</div>
+<div class="panel panel-success">
+  <div class="panel-heading">
     <h3 class="panel-title">Meetings</h3>
   </div>
   <div class="panel-body">
