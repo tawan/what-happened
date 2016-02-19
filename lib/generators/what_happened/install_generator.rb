@@ -6,8 +6,16 @@ module WhatHappened
     include ::Rails::Generators::Migration
     source_root File.expand_path("../templates", __FILE__)
 
+    class_option :skip_helper, type: :boolean, desc: "Don't add view helper."
+
     def create_notifications_migration
       migration_template("create_notifications.rb", "db/migrate/create_notifications.rb", {})
+    end
+
+    def create_helper_files
+      unless options[:skip_helper]
+        template 'helper.rb', File.join('app/helpers', "what_happened_helper.rb")
+      end
     end
 
     def self.next_migration_number(dirname)

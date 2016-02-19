@@ -47,6 +47,4 @@
   </div>
 </div>
 <a class="btn btn-default" href="<%= new_group_meeting_path(@group) -%>" role="button">Schedule Meeting</a>
-<% @group.what_happened.each do |notification| %>
-  <%= render(partial: "what_happened/#{notification.label}", locals: {notification.version.item_type.tableize.singularize.to_sym => notification.version.item, :recipient => notification.recipient }) %>
-<% end %>
+<%= render_notifications(@group.what_happened) %>
