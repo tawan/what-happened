@@ -22,6 +22,16 @@ FactoryGirl.define do
     group
   end
 
+  factory :member, parent: :user do
+    transient do
+      group create(:group)
+    end
+
+    after(:create) do |member, evaluator|
+      create(:membership, user: member, group: evaluator.group)
+    end
+  end
+
   factory :participant, parent: :user do
     transient do
       meeting create(:meeting)
