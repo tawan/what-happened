@@ -9,11 +9,20 @@ RSpec.describe "Notifications", type: :request do
   end
 
   describe "creating a new group membership" do
-    it "renders a welcome message" do
-      post group_memberships_path(group)
-      expect(response).to redirect_to(group_path(group))
+    let!(:member) { create(:member, group: group) }
 
+    before do
+      post group_memberships_path(group)
+    end
+
+    it "renders a welcome message" do
       get group_path(group)
+      expect(response).to have_http_status(:ok)
+      expect(response.body).to match(/welcomes a new member named .*#{user.name}.*/)
+    end
+
+    it "renders a notification for each group member" do
+      get user_notifications_path(member)
       expect(response).to have_http_status(:ok)
       expect(response.body).to match(/welcomes a new member named .*#{user.name}.*/)
     end

@@ -10,7 +10,7 @@ module WhatHappened
     end
 
     def recipient(item)
-      @recipient_callback.call(item)
+      @recipient_callbacks.reduce([]) { |b, c| b << c.call(item) }.flatten
     end
 
     def conditions(recipient = nil, item = nil)

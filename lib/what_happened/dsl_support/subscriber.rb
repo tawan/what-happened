@@ -4,9 +4,10 @@ module WhatHappened
       extend ActiveSupport::Concern
 
       def to(&recipient_callback)
-        @recipient_callback = recipient_callback
+        @recipient_callbacks ||= [ ]
+        @recipient_callbacks << recipient_callback
       end
-      
+
       def except_if(&condition_callback_inversed)
         @condition_callbacks << Proc.new do |*args|
           !condition_callback_inversed.call(*args)

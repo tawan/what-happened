@@ -2,6 +2,7 @@
 creating_membership do
   sends_notification :group_has_new_member do
     to { |membership| membership.group }
+    to { |membership| membership.group.members }
   end
 end
 
