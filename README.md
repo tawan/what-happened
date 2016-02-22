@@ -24,7 +24,7 @@
 # config/notification_routing.rb
 creating_membership do
   sends_notification :one_of_your_groups_has_a_new_member do
-    to { |membership| membership.group.users }
+    to { |membership| membership.group.members }
     except_if { |recipient, membership| recipient.id == membership.user_id}
   end
 
@@ -38,7 +38,7 @@ updating_group do
   skip_attributes(:created_at, :updated_at)
 
   sends_notification :group_was_renamed do
-    to { |group| [ group.users, group ] }
+    to { |group| [ group.members, group ] }
   end
 end
 ```

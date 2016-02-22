@@ -7,7 +7,7 @@ end
 
 creating_meeting do
   sends_notification :new_meeting_announced do
-    to { |meeting| meeting.group.users }
+    to { |meeting| meeting.group.members }
 
     except_if { |recipient, meeting| recipient == meeting.creator }
   end

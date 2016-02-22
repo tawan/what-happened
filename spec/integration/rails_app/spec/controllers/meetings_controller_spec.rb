@@ -7,8 +7,8 @@ RSpec.describe MeetingsController, type: :controller do
 
   before do
     login(creator.id)
-    group.users << creator
-    group.users << another_member
+    group.members << creator
+    group.members << another_member
   end
 
   describe "POST create" do
