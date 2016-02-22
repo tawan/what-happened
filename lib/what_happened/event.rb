@@ -28,18 +28,18 @@ module WhatHappened
     end
 
     def fire(version)
-      recipients = []
+      done = []
       @subscribers.each do |s|
         item = version.item.present? ? version.item : version.reify
-        recipient = s.recipient(item)
+        recipients = s.recipients(item)
         label = s.label
-        unless recipient.respond_to?(:each)
-          recipient = [ recipient ]
+        unless recipients.respond_to?(:each)
+          recipients = [ recipients ]
         end
-        recipient.each do |r|
-          unless recipients.include?(r) || !s.conditions(r, item)
+        recipients.each do |r|
+          unless done.include?(r) || !s.conditions(r, item)
             Notification.create(version: version, recipient: r, label: label)
-            recipients << r
+            done << r
           end
         end
       end

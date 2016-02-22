@@ -17,7 +17,7 @@ describe WhatHappened::Event do
     allow(item_type).to receive(:constantize) { model_class }
     allow(version).to receive(:event) { event_name }
     allow(WhatHappened::Notification).to receive(:create)
-    allow(subscriber).to receive(:recipient) { recipient }
+    allow(subscriber).to receive(:recipients) { recipient }
     allow(subscriber).to receive(:label) { :default }
     allow(subscriber).to receive(:conditions) { true }
   end
@@ -54,7 +54,7 @@ describe WhatHappened::Event do
     end
 
     before do
-      allow(model_instance).to receive(:recipient) { recipient }
+      allow(model_instance).to receive(:recipients) { recipient }
     end
 
     it "creates a notification for each subscriber" do
@@ -79,7 +79,7 @@ describe WhatHappened::Event do
 
     context "when recipient responds to :each" do
       before do
-        allow(model_instance).to receive(:recipient) { [ recipient ] }
+        allow(model_instance).to receive(:recipients) { [ recipient ] }
       end
 
       it "creates a notification for each subscriber" do
@@ -97,7 +97,7 @@ describe WhatHappened::Event do
       end
 
       before do
-        allow(subscriber_2).to receive(:recipient) { recipient }
+        allow(subscriber_2).to receive(:recipients) { recipient }
         allow(subscriber_2).to receive(:label) { :default }
         allow(subscriber_2).to receive(:conditions) { true }
       end
@@ -115,7 +115,7 @@ describe WhatHappened::Event do
     subject { event.add_subscriber(subscriber) }
 
     it "adds subscriber" do
-      expect(subscriber).to receive(:recipient).with(model_instance)
+      expect(subscriber).to receive(:recipients).with(model_instance)
       expect(subscriber).to receive(:label)
       subject
       event.fire(version)

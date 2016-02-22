@@ -9,7 +9,7 @@ module WhatHappened
       @condition_callbacks = [ Proc.new { true } ]
     end
 
-    def recipient(item)
+    def recipients(item)
       @recipient_callbacks.reduce([]) { |b, c| b << c.call(item) }.flatten
     end
 
