@@ -7,26 +7,18 @@ module WhatHappened
     def initialize
       @events =  [ ]
       @queue_name = :default
+      @topics = { }
     end
 
-    def track_create(model_class, event_subscribers = nil)
-      track(:create, model_class, event_subscribers)
+    def topic(model_class, event_name)
+      @topics[model_class] ||= { }
+      @topics[model_class][event_name] ||= Topic.new(model_class,event_name)
     end
 
-    def track_update(model_class, event_subscribers = nil, skip_attributes = nil)
-      track(:update, model_class, event_subscribers, skip_attributes)
-    end
-
-    def track_destroy(model_class, event_subscribers = nil)
-      track(:destroy, model_class, event_subscribers)
-    end
-
-    def broadcast(version)
-      unless mute?
-        triggering_events(version).each do |event|
-          event.fire(version)
-        end
-      end
+    def all_topics
+      t = @topics.values
+      return [ ] if t.empty?
+      t.collect(&:values).flatten
     end
 
     def mute?
@@ -40,25 +32,29 @@ module WhatHappened
       @mute = was_muted
     end
 
-    private
-
-    def track(event_name, model_class, event_subscribers = nil, skip_attributes = nil)
-      paper_trail_on(event_name, model_class)
-      event = Event.new(model_class, event_name, event_subscribers)
-      event.skip_attributes(*skip_attributes) unless skip_attributes.nil?
-      @events << event
-    end
-
-    def triggering_events(version)
-      @events.select { |e| e.fires?(version) }
-    end
-
-    def paper_trail_on(event_name, model_class)
-      unless model_class.paper_trail_enabled_for_model?
-        model_class.has_paper_trail :on => []
+    def append_paper_trail
+      all_topics.each do |topic|
+        unless topic.model_class.paper_trail_enabled_for_model?
+          topic.model_class.has_paper_trail :on => []
+        end
+        tracked_events = (topic.model_class.paper_trail_options[:on] << topic.event_name).uniq
+        topic.model_class.has_paper_trail :on => tracked_events
       end
-      tracked_events = (model_class.paper_trail_options[:on] << event_name).uniq
-      model_class.has_paper_trail :on => tracked_events
+    end
+
+    def hook_into_active_record_cycle
+      callback, *args = if Rails.application.config.what_happened.after_commit
+        [:after_commit, { on: :create }]
+      else
+        ["after_create".to_sym ]
+      end
+
+      PaperTrail::Version.send(callback, *args) do |version|
+        config = WhatHappened.config
+        config.all_topics.select { |t| t.applies?(version) }.each do |topic|
+          topic.publish(version)
+        end
+      end
     end
   end
 end

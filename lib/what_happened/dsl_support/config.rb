@@ -9,35 +9,18 @@ module WhatHappened
 
       def method_missing(methodId, *args, &spec)
         if m = methodId.to_s.match(/\Acreating_(.+)\z/)
-          creating(m[1], spec)
+          specifify_topic(m[1], :create, spec)
         elsif m = methodId.to_s.match(/\Aupdating_(.+)\z/)
-          updating(m[1], spec)
+          specifify_topic(m[1], :update, spec)
         elsif m = methodId.to_s.match(/\Adestroying_(.+)\z/)
-          destroying(m[1], spec)
+          specifify_topic(m[1], :destroy, spec)
         else
           super
         end
       end
 
-
-      def creating(model, event_specification)
-        run_event_specification(event_specification)
-        track_create(model.to_s.camelize.constantize, @produced_subscribers)
-      end
-
-      def updating(model, event_specification)
-        run_event_specification(event_specification)
-        model_class = model.to_s.camelize.constantize
-        track_update(model_class, @produced_subscribers, @skip_attributes)
-      end
-
-      def destroying(model, event_specification)
-        run_event_specification(event_specification)
-        track_destroy(model.to_s.camelize.constantize, @produced_subscribers)
-      end
-
       def skip_attributes(*attributes)
-        @skip_attributes = attributes.flatten
+        @current_topic.skip_attributes(attributes.flatten)
       end
       alias :skip_attribute :skip_attributes
 
@@ -48,15 +31,14 @@ module WhatHappened
       def sends_notification(label, &subscriber_specifiation)
         subscriber = WhatHappened::Subscriber.new(label)
         subscriber.instance_eval(&subscriber_specifiation)
-        @produced_subscribers << subscriber
+        @current_topic.add_subscriber(subscriber)
       end
 
       private
 
-      def run_event_specification(event_specification)
-        @produced_subscribers = [ ]
-        @skip_attributes = nil
-        instance_eval(&event_specification)
+      def specifify_topic(model, event_name, subscriber_specification)
+        @current_topic = topic(model.to_s.camelize.constantize, event_name)
+        instance_eval(&subscriber_specification)
       end
     end
   end
