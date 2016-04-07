@@ -20,7 +20,12 @@ module WhatHappened
 
     def publish_event(event_type)
       all_topics = WhatHappened.config.all_topics
-      changeset = JSON.dump(changes)
+      changeset = if changes.empty?
+        JSON.dump(previous_changes)
+      else
+        JSON.dump(changes)
+      end
+
       event =  WhatHappened::Event.new(
         item: self, event_type: event_type, changeset: changeset)
       applying_topics = all_topics.select { |t| t.applies?(event) }
