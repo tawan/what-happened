@@ -10,10 +10,9 @@
     gem 'what_happened', :git => 'https://github.com/tawan/what-happened.git', :branch => 'master'
     ```
 
-1. Add a `versions` and `notifications` table to your database.
+1. Add a `events` and `notifications` table to your database.
 
     ```bash
-    bundle exec rails generate paper_trail:install --with-changes
     bundle exec rails generate what_happened:install
     bundle exec rake db:migrate
     ```
