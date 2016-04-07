@@ -7,18 +7,31 @@ module WhatHappened
     def initialize
       @events =  [ ]
       @queue_name = :default
-      @topics = { }
+      @topics = [ ]
     end
 
-    def topic(model_class, event_name)
-      @topics[model_class] ||= { }
-      @topics[model_class][event_name] ||= Topic.new(model_class,event_name)
+    def find_or_create_topic(event_type, model_class)
+      topic = nil
+      filtered = find_topics(event_type, model_class)
+      if filtered.empty?
+        topic =  Topic.new(model_class, event_type)
+        @topics << topic
+      else
+        topic = filtered.first
+      end
+      topic
+    end
+
+    def find_topics(event_type, model_class = nil)
+      filtered = @topics.select { |t| t.event_type == event_type }
+      unless model_class.nil?
+        filtered = filtered.select { |t| t.model_class == model_class }
+      end
+      filtered
     end
 
     def all_topics
-      t = @topics.values
-      return [ ] if t.empty?
-      t.collect(&:values).flatten
+      @topics
     end
 
     def mute?
@@ -32,27 +45,16 @@ module WhatHappened
       @mute = was_muted
     end
 
-    def append_paper_trail
-      all_topics.each do |topic|
-        unless topic.model_class.paper_trail_enabled_for_model?
-          topic.model_class.has_paper_trail :on => []
-        end
-        tracked_events = (topic.model_class.paper_trail_options[:on] << topic.event_name).uniq
-        topic.model_class.has_paper_trail :on => tracked_events
-      end
-    end
-
     def hook_into_active_record_cycle
-      callback, *args = if Rails.application.config.what_happened.after_commit
-        [:after_commit, { on: :create }]
-      else
-        ["after_create".to_sym ]
-      end
-
-      PaperTrail::Version.send(callback, *args) do |version|
-        config = WhatHappened.config
-        config.all_topics.select { |t| t.applies?(version) }.each do |topic|
-          topic.publish(version)
+      [:create, :update].each do |event_type|
+        topics = find_topics(event_type)
+        next if topics.empty?
+        topics.each do |topic|
+          if Rails.application.config.what_happened.after_commit
+            topic.model_class.after_commit "publish_#{event_type}".to_sym, on: event_type
+          else
+            topic.model_class.send("after_#{event_type}".to_sym, "publish_#{event_type}".to_sym)
+          end
         end
       end
     end

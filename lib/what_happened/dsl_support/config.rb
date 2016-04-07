@@ -36,8 +36,9 @@ module WhatHappened
 
       private
 
-      def specifify_topic(model, event_name, subscriber_specification)
-        @current_topic = topic(model.to_s.camelize.constantize, event_name)
+      def specifify_topic(model, event_type, subscriber_specification)
+        model_class = model.to_s.camelize.constantize
+        @current_topic = find_or_create_topic(event_type, model_class )
         instance_eval(&subscriber_specification)
       end
     end

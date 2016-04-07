@@ -4,7 +4,7 @@ module Helpers
       # create and mount thread local config
       WhatHappened::ConfigRegistry.config = WhatHappened::Config.new
       WhatHappened::ConfigRegistry.config.specify &specification
-      WhatHappened::ConfigRegistry.config.append_paper_trail
+      WhatHappened::ConfigRegistry.config.hook_into_active_record_cycle
     end
 
     after do

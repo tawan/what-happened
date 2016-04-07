@@ -67,11 +67,10 @@ RSpec.configure do |config|
   config.before(:suite) do
     Dir.chdir(File.expand_path('..', File.dirname(__FILE__))) do
       Dir.glob("db/migrate/**.rb").each do |f|
-        FileUtils.rm(f) if f =~ /.*(create_versions|add_object_changes|create_notifications).*/
+        FileUtils.rm(f) if f =~ /.*(create_events|create_notifications).*/
       end
       helper_path = "app/helpers/what_happened_helper.rb"
       FileUtils.rm(helper_path) if File.exists?(helper_path)
-      Rails::Generators::Base.new.generate("paper_trail:install", "--with-changes")
       Rails::Generators::Base.new.generate("what_happened:install")
       load(helper_path)
       Rails.application.load_tasks

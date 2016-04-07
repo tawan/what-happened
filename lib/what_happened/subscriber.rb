@@ -7,11 +7,11 @@ module WhatHappened
       @condition_callbacks = [ Proc.new { true } ]
     end
 
-    def accept_version(version)
-      item = version.item.present? ? version.item : version.reify
+    def accept_version(event)
+      item = event.item
       recipients(item).each do |r|
         if conditions(r, item)
-          Notification.create(version: version, recipient: r, label: @label)
+          Notification.create(event: event, recipient: r, label: @label)
         end
       end
     end

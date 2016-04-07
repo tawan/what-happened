@@ -4,11 +4,11 @@ module WhatHappenedHelper
   end
 
   def render_notification(notification, *args)
-    changed_attributes = notification.version.changeset.keys.reduce([]) { |sum, key| sum << key; sum << key.to_sym }
+    changed_attributes = notification.event.changeset.keys.reduce([]) { |sum, key| sum << key; sum << key.to_sym }
     render(
       partial: "what_happened/#{notification.label}",
       locals: {
-        notification.version.item_type.tableize.singularize.to_sym => notification.version.item,
+        notification.event.item_type.tableize.singularize.to_sym => notification.event.item,
         recipient: notification.recipient, changed_attributes: changed_attributes
       })
   end

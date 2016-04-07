@@ -10,6 +10,7 @@ module WhatHappened
 
     def create_notifications_migration
       migration_template("create_notifications.rb", "db/migrate/create_notifications.rb", {})
+      migration_template("create_events.rb", "db/migrate/create_events.rb", {})
     end
 
     def create_helper_files
