@@ -1,6 +1,6 @@
 module WhatHappenedHelper
   def render_notifications(notifications, *args)
-    notifications.reduce('') { |buffer, n| buffer << render_notification(n, *args) }
+    notifications.reduce('') { |buffer, n| buffer << render_notification(n, *args) }.html_safe
   end
 
   def render_notification(notification, *args)
@@ -10,6 +10,6 @@ module WhatHappenedHelper
       locals: {
         notification.event.item_type.tableize.singularize.to_sym => notification.event.item,
         recipient: notification.recipient, changed_attributes: changed_attributes
-      })
+      }).html_safe
   end
 end
