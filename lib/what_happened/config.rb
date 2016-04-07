@@ -34,15 +34,15 @@ module WhatHappened
       @topics
     end
 
-    def mute?
-      @mute ||= false
+    def disabled?
+      @disabled ||= false
     end
 
-    def mute
-      was_muted = mute?
-      @mute = true
+    def disabled
+      was_disabled = disabled?
+      @disabled = true
       yield
-      @mute = was_muted
+      @disabled = was_disabled
     end
 
     def hook_into_active_record_cycle
