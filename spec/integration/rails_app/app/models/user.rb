@@ -1,4 +1,4 @@
-class User < ActiveRecord::Base
+class User < ApplicationRecord
   has_many :groups, through: :memberships
   has_many :memberships
   has_many :participations

@@ -1,4 +1,4 @@
-class Participation < ActiveRecord::Base
+class Participation < ApplicationRecord
   belongs_to :user
   belongs_to :meeting
 end

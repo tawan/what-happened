@@ -1,4 +1,4 @@
-class Meeting < ActiveRecord::Base
+class Meeting < ApplicationRecord
   belongs_to :group
   has_many :participations
   has_many :participants, through: :participations, class_name: "User", source: :user
