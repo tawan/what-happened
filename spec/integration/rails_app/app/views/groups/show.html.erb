@@ -1,4 +1,3 @@
-<p>What happened in group <%= @group.name -%></p>
 <div class="panel panel-success">
   <div class="panel-heading">
     <h3 class="panel-title">Members</h3>
@@ -47,6 +46,7 @@
   </div>
 </div>
 <a class="btn btn-default" href="<%= new_group_meeting_path(@group) -%>" role="button">Schedule Meeting</a>
+<p>What happened</p>
 <div id="group_notifications">
 <%= render_notifications(@group.what_happened) %>
 </div>

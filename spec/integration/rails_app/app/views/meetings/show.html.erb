@@ -1,4 +1,3 @@
-<p>What happened in meeting <%= @meeting.name -%></p>
 <% if @edit %>
 <%= render partial: 'form', locals: { group: @meeting.group, edit: true, url: group_meeting_path(@meeting.group, @meeting), meeting: @meeting } %>
 <% else %>
@@ -22,6 +21,5 @@
     </div>
   </div><!-- /.col-sm-4 -->
 </div>
-<% @meeting.what_happened.each do |notification| %>
-  <%= render(partial: "what_happened/#{notification.label}", locals: {notification.version.item_type.tableize.singularize.to_sym => notification.version.item, :recipient => notification.recipient }) %>
-<% end %>
+<p>What happened</p>
+<%= render_notifications(@meeting.what_happened) %>

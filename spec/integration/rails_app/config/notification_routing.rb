@@ -26,5 +26,7 @@ updating_meeting do
 
   sends_notification :meeting_was_updated do
     to { |meeting| meeting.participants }
+    to { |meeting| meeting }
+    to { |meeting| meeting.group }
   end
 end

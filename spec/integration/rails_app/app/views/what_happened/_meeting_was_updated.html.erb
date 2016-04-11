@@ -1,10 +1,10 @@
 <p>
-The meeting <%= meeting.name %> has been updated.
+The meeting <%= link_to meeting.name, group_meeting_path(meeting.group, meeting) %> has been updated.
 <% if changed_attributes.include?(:starts_at) && changed_attributes.include?(:ends_at) %>
 It was rescheduled and has a new beginning and end: <%= meeting.starts_at.to_date.to_formatted_s(:iso8601) %> - <%= meeting.starts_at.to_date.to_formatted_s(:iso8601) %>
 <% elsif changed_attributes.include?(:starts_at) %>
 It was rescheduled and starts now on the <%= meeting.starts_at.to_date.to_formatted_s(:iso8601) %>
 <% elsif changed_attributes.include?(:ends_at) %>
-It was rescheduled and ends_at now on the <%= meeting.starts_at.to_date.to_formatted_s(:iso8601) %>
+It was rescheduled and ends now on the <%= meeting.starts_at.to_date.to_formatted_s(:iso8601) %>
 <% end %>
 </p>
