@@ -58,6 +58,8 @@ App.cable.subscriptions.create({channel: "NotificationsChannel", recipient: "<%=
   disconnected: function() {},
 
   received: function(data) {
-    jQuery("#group_notifications").prepend(data.notification);
+    var n = jQuery(data.notification);
+    jQuery("#group_notifications").prepend(n);
+    n.effect("highlight", {}, 3000);
   }});
 <% end -%>

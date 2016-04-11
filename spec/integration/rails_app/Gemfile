@@ -7,6 +7,7 @@ gem 'sprockets-rails', github: "rails/sprockets-rails"
 # Use sqlite3 as the database for Active Record
 gem 'sqlite3'
 gem 'jquery-rails'
+gem 'jquery-ui-rails'
 gem 'coderay'
 gem 'what_happened', path: "../../.."
 gem 'redis'
