@@ -23,5 +23,7 @@ module RailsApp
     # Do not swallow errors in after_commit/after_rollback callbacks.
     config.active_record.raise_in_transactional_callbacks = true
     config.autoload_paths << Rails.root.join('lib')
+
+    config.action_cable.disable_request_forgery_protection = true
   end
 end
