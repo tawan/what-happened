@@ -47,4 +47,17 @@
   </div>
 </div>
 <a class="btn btn-default" href="<%= new_group_meeting_path(@group) -%>" role="button">Schedule Meeting</a>
+<div id="group_notifications">
 <%= render_notifications(@group.what_happened) %>
+</div>
+
+<%= javascript_tag do -%>
+App.cable.subscriptions.create({channel: "NotificationsChannel", recipient: "<%= @group.to_signed_global_id -%>"}, {
+  connected: function() {  },
+
+  disconnected: function() {},
+
+  received: function(data) {
+    jQuery("#group_notifications").prepend(data.notification);
+  }});
+<% end -%>

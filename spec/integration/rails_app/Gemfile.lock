@@ -1,3 +1,20 @@
+GIT
+  remote: git://github.com/rails/coffee-rails.git
+  revision: 29604a59a5d7ea314f54bb52302d68ef134806bf
+  specs:
+    coffee-rails (4.1.1)
+      coffee-script (>= 2.2.0)
+      railties (>= 4.0.0, < 5.1.x)
+
+GIT
+  remote: git://github.com/rails/sprockets-rails.git
+  revision: 4f4b387ea315ba76048079434d53dd44d5a3b0ce
+  specs:
+    sprockets-rails (3.0.4)
+      actionpack (>= 4.0)
+      activesupport (>= 4.0)
+      sprockets (>= 3.0.0)
+
 PATH
   remote: ../../..
   specs:
@@ -50,10 +67,15 @@ GEM
     builder (3.2.2)
     byebug (8.2.4)
     coderay (1.1.1)
+    coffee-script (2.4.1)
+      coffee-script-source
+      execjs
+    coffee-script-source (1.10.0)
     concurrent-ruby (1.0.1)
     debug_inspector (0.0.2)
     diff-lcs (1.2.5)
     erubis (2.7.0)
+    execjs (2.6.0)
     factory_girl (4.7.0)
       activesupport (>= 3.0.0)
     globalid (0.3.6)
@@ -83,6 +105,7 @@ GEM
       slop (~> 3.4)
     pry-rails (0.3.4)
       pry (>= 0.9.10)
+    puma (3.4.0)
     rack (2.0.0.alpha)
       json
     rack-test (0.6.3)
@@ -114,6 +137,7 @@ GEM
       rake (>= 0.8.7)
       thor (>= 0.18.1, < 2.0)
     rake (11.1.2)
+    redis (3.2.2)
     rspec-core (3.1.7)
       rspec-support (~> 3.1.0)
     rspec-expectations (3.1.2)
@@ -134,10 +158,6 @@ GEM
     sprockets (3.6.0)
       concurrent-ruby (~> 1.0)
       rack (> 1, < 3)
-    sprockets-rails (3.0.4)
-      actionpack (>= 4.0)
-      activesupport (>= 4.0)
-      sprockets (>= 3.0.0)
     sqlite3 (1.3.11)
     thor (0.19.1)
     thread_safe (0.3.5)
@@ -158,11 +178,15 @@ PLATFORMS
 DEPENDENCIES
   byebug
   coderay
+  coffee-rails!
   factory_girl
   jquery-rails
   pry-rails
+  puma
   rails (= 5.0.0.beta3)
+  redis
   rspec-rails
+  sprockets-rails!
   sqlite3
   web-console (~> 2.0)
   what_happened!

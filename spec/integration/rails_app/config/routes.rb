@@ -13,4 +13,6 @@ Rails.application.routes.draw do
     resources :notifications
   end
   resources :sessions
+
+  mount ActionCable.server => '/cable'
 end
