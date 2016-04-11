@@ -12,6 +12,7 @@ gem 'what_happened', path: "../../.."
 gem 'redis'
 gem 'puma'
 gem 'coffee-rails', github: "rails/coffee-rails"
+gem 'uglifier'
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug'
