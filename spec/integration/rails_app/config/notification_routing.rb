@@ -15,6 +15,10 @@ creating_meeting do
     to { |meeting| meeting.group.members }
     except_if { |recipient, meeting| recipient == meeting.creator }
   end
+
+  sends_notification :new_meeting_in_group do
+    to { |meeting| meeting.group }
+  end
 end
 
 updating_meeting do
