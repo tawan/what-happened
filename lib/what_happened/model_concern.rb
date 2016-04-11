@@ -11,7 +11,7 @@ module WhatHappened
     end
 
     def what_happened(since = nil)
-      s = Notification.where(recipient: self)
+      s = Notification.where(recipient: self).order("created_at DESC")
       unless since.nil?
         s = s.where(["created_at >= ?", since ])
       end
