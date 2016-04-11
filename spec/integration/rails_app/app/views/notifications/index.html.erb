@@ -1,3 +1,13 @@
 <div id="notifications">
 <%= render_notifications(@user.what_happened) %>
 </div>
+<%= javascript_tag do -%>
+App.cable.subscriptions.create({channel: "NotificationsChannel", recipient: "<%= @user.to_signed_global_id -%>"}, {
+  connected: function() {  },
+
+  disconnected: function() {},
+
+  received: function(data) {
+    jQuery("#notifications").prepend(data.notification);
+  }});
+<% end -%>
