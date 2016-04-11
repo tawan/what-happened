@@ -25,8 +25,20 @@
           <li>
             <% if current_user.present? -%>
             <a href="<%= user_notifications_path(current_user) -%>">
-              My notifications <span class="badge"><%= current_user.what_happened.count -%></span>
+              My notifications <span id=counter class="badge"><%= current_user.what_happened.count -%></span>
             </a>
+            <%= javascript_tag do -%>
+            App.cable.subscriptions.create({channel: "NotificationsChannel", recipient: "<%= current_user.to_signed_global_id -%>"}, {
+              connected: function() {  },
+
+              disconnected: function() {},
+
+              received: function(data) {
+                var count = parseInt(jQuery("#counter").text());
+                count = count + 1;
+                jQuery("#counter").text(count);
+              }});
+            <% end -%>
             <% else -%>
             <a href="<%= new_session_path -%>">
               Sign in
