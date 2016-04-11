@@ -18,6 +18,15 @@
               <%- User.all.each do |u| %>
               <a href="<%= user_path(u) -%>" class="list-group-item clearfix">
                 <%= u.name -%>
+                <span class="pull-right">
+                  <% unless current_user.present? -%>
+                  <form role="form" method="post" action="<%= sessions_path -%>">
+                    <button type="submit" class="btn btn-primary btn-xs">Sign in!</button>
+                    <input name="authenticity_token" value="<%= form_authenticity_token %>" type="hidden" />
+                    <input name="user[name]" id="inputName" value="<%= u.name -%>" type="hidden" />
+                  </form>
+                  <% end -%>
+                </span>
               </a>
               <%- end %>
             </div>
@@ -35,7 +44,7 @@
                 <span class="pull-right">
                   <% if current_user.present? && current_user.groups.include?(g) -%>
                   <i>already member</i>
-                  <% else -%>
+                  <% elsif current_user.present? -%>
                   <form role="form" method="post" action="<%= group_memberships_path(g) -%>">
                     <button type="submit" class="btn btn-primary btn-xs">Join group</button>
                     <input name="authenticity_token" value="<%= form_authenticity_token %>" type="hidden">
