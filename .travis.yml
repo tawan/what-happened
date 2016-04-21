@@ -13,7 +13,7 @@ env:
   - TEST_WITH_RUBY=2.3
 
 before_install:
-  - mv Dockerfile Dockerfile.tmp && cat Dockerfile.tmp | ruby -e "puts STDIN.read.sub(/FROM ruby:(.+)$/, \"FROM ruby:#{ENV['TEST_WITH_RUBY']}\")" > Dockerfile && rm Dockerfile.tmp
+  - mv Dockerfile Dockerfile.tmp && cat Dockerfile.tmp | ruby -e "puts STDIN.read.sub(/(FROM tawan\/what-happened-base:ruby-)(.+)$/, '\1' + ENV['TEST_WITH_RUBY'])" > Dockerfile && rm Dockerfile.tmp
   - docker build -t tawan/what-happened .
 
 install: true
