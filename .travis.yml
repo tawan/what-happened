@@ -6,7 +6,6 @@ services:
     - docker
 
 env:  
-  - TEST_WITH_RUBY=1.9
   - TEST_WITH_RUBY=2.0
   - TEST_WITH_RUBY=2.1
   - TEST_WITH_RUBY=2.2

@@ -1,4 +1,4 @@
-versions = %w(1.9 2.0 2.1 2.2 2.3)
+versions = %w(2.0 2.1 2.2 2.3)
 
 versions.each do |version|
   system "rm Dockerfile" if File.exists?('Dockerfile')
