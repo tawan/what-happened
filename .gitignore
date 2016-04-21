@@ -1,2 +1,5 @@
 .byebug_history
 *.swp
+.ruby-gemset
+.ruby-version
+Gemfile.lock
