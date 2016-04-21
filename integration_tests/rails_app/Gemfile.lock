@@ -1,5 +1,5 @@
 PATH
-  remote: ../../..
+  remote: /usr/src/gem
   specs:
     what_happened (0.1.0)
       rails (~> 4.2)
@@ -156,3 +156,6 @@ DEPENDENCIES
   sqlite3
   web-console (~> 2.0)
   what_happened!
+
+BUNDLED WITH
+   1.11.2

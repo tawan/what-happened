@@ -7,7 +7,7 @@ gem 'rails', '4.2.5'
 gem 'sqlite3'
 gem 'jquery-rails'
 gem 'coderay'
-gem 'what_happened', path: "../../.."
+gem 'what_happened', path: "/usr/src/gem"
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug'

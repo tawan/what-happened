@@ -1,0 +1,11 @@
+FROM tawan/what-happened-base:ruby-2.3
+
+RUN mkdir -p /usr/src/app
+RUN mkdir -p /usr/src/gem
+WORKDIR /usr/src/app
+
+COPY integration_tests/rails_app/Gemfile /usr/src/app/Gemfile
+COPY integration_tests/rails_app/Gemfile.lock /usr/src/app/Gemfile.lock
+COPY . /usr/src/gem
+
+RUN bundle install
