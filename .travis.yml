@@ -5,6 +5,13 @@ language: ruby
 services:  
     - docker
 
+env:  
+  - TEST_WITH_RUBY=1.9
+  - TEST_WITH_RUBY=2.0
+  - TEST_WITH_RUBY=2.1
+  - TEST_WITH_RUBY=2.2
+  - TEST_WITH_RUBY=2.3
+
 before_install:
   - mv Dockerfile Dockerfile.tmp && cat Dockerfile.tmp | ruby -e "puts STDIN.read.sub(/FROM ruby:(.+)$/, \"FROM ruby:#{ENV['TEST_WITH_RUBY']}\")" > Dockerfile && rm Dockerfile.tmp
   - docker build -t tawan/what-happened .
@@ -13,6 +20,3 @@ install: true
 
 script:
     - docker run  tawan/what-happened bundle exec rspec spec
-env:  
-  global:
-    - TEST_WITH_RUBY: 2.3
