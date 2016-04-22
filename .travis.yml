@@ -20,4 +20,4 @@ before_install:
 install: true
 
 script:
-    - ./run_tests.sh
+    - ./run_tests.rb
